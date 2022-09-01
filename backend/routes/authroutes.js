@@ -9,24 +9,56 @@ const {protect}= require("../authMiddleware")
 app.post('/register',async(req,res)=>{
     try{
         //data check
-        const {UserName,Email,Password} = req.body;
+        const {UserName,Email,Password1,Password2} = req.body;
 
-        if(!UserName || !Email || !Password)
-            res.status(400).send("need data");
+        if(!UserName || !Email || !Password1 || !Password2)
+        {
+            res.status(400).json({msg:"need data"});
+            return;
+        }
         
-        const userExists = await User.findOne({Email:Email});
+        if(UserName.toLowerCase().replace(/ /g,'').length<5)
+        {
+            res.status(400).json({msg:"username less than 5 characters"});
+            return;
+        }
+
+        if(!Email.toLowerCase().replace(/ /g,'')
+        .match(
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        )){
+            res.status(400).json({msg:"please enter right email"});
+            return;
+        }
+
+        if(!Password1.replace(/ /g,'').match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{4,}$/) )
+            {
+            res.status(400).json({msg:"Password should contains uppercase , numbers amd should be more than 4 characters "});
+            return;
+            }
+
+
+        if(Password1.replace(/ /g,'') != Password2.replace(/ /g,''))
+        {    
+        res.status(400).json({msg:"the passwords are not equal"});
+        return
+        }
+
+        const userExists = await User.findOne({Email:Email.toLowerCase().replace(/ /g,'')});
 
         if(userExists)
-            res.status(400).send("user already exist");
-
+        {
+            res.status(400).json({msg:"email already used"});
+        return;
+        }
         //hash password
         const salt = await bcrypt.genSalt(10);
-        const hashedpassword = await bcrypt.hash(Password,salt);
+        const hashedpassword = await bcrypt.hash(Password1.replace(/ /g,''),salt);
 
         //create user
         const user = await User.create({
-            UserName:UserName,
-            Email:Email,
+            UserName:UserName.toLowerCase().replace(/ /g,''),
+            Email:Email.replace(/ /g,''),
             Password:hashedpassword,
             Role:"user"
         })
@@ -40,11 +72,12 @@ app.post('/register',async(req,res)=>{
             });
         }
         else
-            res.status(400).send("invalid user data")
+            res.status(500).json({msg:"invalid user data"})
     }
     catch(error)
     {
         console.log(error);
+        //res.status(500).json({msg:error.message});
     }
 })
 
@@ -55,7 +88,7 @@ app.post('/login',async(req,res)=>{
         const {Email,Password} = req.body;
 
         if(!Email || !Password)
-            res.status(400).send("need data");
+            res.status(400).json({msg:"need data"});
         
         const user = await User.findOne({Email:Email});
 
@@ -69,11 +102,13 @@ app.post('/login',async(req,res)=>{
             });
         }
         else
-            res.status(400).send("invalid email or password")
+            res.status(400).json({msg:"invalid email or password"});
     }
     catch(error)
     {
         console.log(error);
+        //res.status(500).json({msg:error.message});
+
     }
 })
 
@@ -90,6 +125,8 @@ app.get('/getme',protect,async(req,res)=>{
     }catch(error)
     {
         console.log(error);
+        //res.status(500).json({msg:error.message});
+
     }
 })
 
@@ -126,6 +163,8 @@ app.post('/forgetpassword',async(req,res)=>{
     catch(error)
     {
         console.log(error);
+        //res.status(500).json({msg:error.message});
+
     }
 })
 
@@ -152,6 +191,8 @@ app.put('/resetpassword/:token',async(req,res)=>{
     }catch(error)
     {
         console.log(error);
+        //res.status(500).json({msg:error.message});
+
     }
 })
 

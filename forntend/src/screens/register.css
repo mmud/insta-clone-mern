@@ -27,7 +27,7 @@
     font-family: "Roboto", sans-serif;
     text-transform: uppercase;
     outline: 0;
-    background: #4CAF50;
+    background: #f48021;
     width: 100%;
     border: 0;
     padding: 15px;
@@ -39,7 +39,7 @@
   }
 
   form button:hover,.form button:active,.form button:focus {
-    background: #43A047;
+    background: #bd631a;
   }
 
   form .message {
@@ -57,9 +57,6 @@
     display: none;
   }
 
-  body {
-    background: #424242; /* fallback for old browsers */
-    font-family: "Roboto", sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;      
+  .register-form .logo{
+    width: 100px;
   }
