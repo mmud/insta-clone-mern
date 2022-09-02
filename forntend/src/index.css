@@ -15,7 +15,6 @@ html{
 body{
   font-family: 'Open Sans', sans-serif, Arial, Helvetica, sans-serif;
   background: #f0f2f5; /* fallback for old browsers */
-
 }
 
 .container {
@@ -57,7 +56,7 @@ ol{
 
 a{
   text-decoration: none;
-  color: white;
+  color: black;
 }
 /* End Rules */
 
