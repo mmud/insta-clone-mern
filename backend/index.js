@@ -28,3 +28,4 @@ connectDB();
 
 //routes
 app.use("/api/auth", require("./routes/authroutes"));
+app.use("/api/user", require("./routes/userroutes"));

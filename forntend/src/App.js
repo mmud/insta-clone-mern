@@ -44,7 +44,7 @@ function App() {
   }, [])
 
   function parseJwt (token) {
-    if(token==="null")
+    if(token==="null" ||token===null ||token===undefined)
     return null
     var base64Url = token.split('.')[1];
     var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');

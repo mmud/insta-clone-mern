@@ -15,7 +15,6 @@ export default function Profile() {
     'http://localhost:3500/api/auth/getme',
     config
   ).then((response)=>{
-    console.log(response);
     setuserdata(response.data);
     setloading(true);
   }).catch(console.log);  

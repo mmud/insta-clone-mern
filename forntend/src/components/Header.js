@@ -1,13 +1,14 @@
-import React,{useRef} from 'react'
+import React,{useEffect, useRef, useState} from 'react'
 import "./header.css"
 import { NavLink,useNavigate,Link } from "react-router-dom";
 import shlogo from "../images/sh.png"
 import avatar from "../images/avatar.png"
+import Axios from "axios"
+import UserSearchCard from './UserSearchCard';
 
 
 export default function Header() {
   const Navigate = useNavigate();
-
   const sidenav = useRef(null)
   const dropdown = useRef(null)
 
@@ -18,7 +19,7 @@ export default function Header() {
   }
 
   function parseJwt (token) {
-    if(token==="null")
+    if(token==="null" ||token===null ||token===undefined)
       return null
     var base64Url = token.split('.')[1];
     var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -29,6 +30,25 @@ export default function Header() {
     return JSON.parse(jsonPayload);
     };
 
+    //search
+    const [search, setsearch] = useState(null);
+    const [issearch, setissearch] = useState(false);
+    const [users, setusers] = useState(null); 
+    useEffect(() => {
+      if(issearch)
+      {
+        const ser = async()=>{
+        await Axios.get( 
+          `http://localhost:3500/api/user/searchbyname?UserName=${search}`,
+        ).then((Response)=>setusers(Response.data)).catch(console.log);
+      }
+      ser();
+      }
+      else
+        setusers(null);
+    }, [search,issearch])
+    
+
   return (
     <>
       <header>
@@ -38,8 +58,11 @@ export default function Header() {
             <img src={shlogo} alt="logo"/>
           </NavLink>
           <div className="search-box">
-          <input className="search-input" type="text" placeholder="Search something.."/>
+          <input className="search-input" onFocus={()=>setissearch(true)} onBlur={()=>setissearch(false)} onChange={(e)=>setsearch(e.target.value)} type="text" placeholder="Search something.."/>
           <button className="search-btn"><i className="fas fa-search"></i></button>
+          <div className='searchcont'>
+            {users?.map((user,i)=><UserSearchCard key={`usersearchard${i}`} avatar={user.avatar} UserName={user.UserName} id={user._id}/>)}
+          </div>
           </div>
           <div className="menu" id="myTopnav">
             <ul style={{"display":"flex","alignItems":"center","position":"relative"}}>
@@ -65,7 +88,7 @@ export default function Header() {
       
    
 
-      <div id="mySidenav" class="sidenav" ref={sidenav}>
+      <div id="mySidenav" className="sidenav" ref={sidenav}>
         <div className='icon x' onClick={()=>sidenav.current.style.width="0"}>&times;</div>
           <li><NavLink to="/"><i className="fa-solid fa-house"></i> Home</NavLink></li>
           <li><NavLink to="/messages"><i className="fa-solid fa-comment"></i> Messages</NavLink></li>

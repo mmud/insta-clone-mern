@@ -4,11 +4,11 @@ import Axios from "axios"
 import { useNavigate } from "react-router-dom";
 import shimg from "../images/sh.png"
 import Swal from 'sweetalert2'
-import withReactContent from 'sweetalert2-react-content'
+//import withReactContent from 'sweetalert2-react-content'
 
 export default function Login() {
   const Navigate = useNavigate();
-  const MySwal = withReactContent(Swal)
+  //const MySwal = withReactContent(Swal)
 
   const [inputs,setInputs] = useState({
     Email:"",
@@ -20,7 +20,6 @@ export default function Login() {
         ...prev,
         [e.target.name]: e.target.value
     }))
-    console.log(inputs);
   }
 
   const submithandler=(e)=>{

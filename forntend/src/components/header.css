@@ -28,10 +28,7 @@ header{
     justify-content: space-between;
     align-items: center;
 }
-.logo{
-	float:left;
-	margin-left: 20px;
-}
+
 .logo img{
 	height: 50px;
 }
@@ -45,7 +42,6 @@ header{
 }
 .menu li{
 	display: inline;
-	margin-right-last:0px; 
 }
 .menu a{
 	text-decoration: none;
@@ -224,17 +220,6 @@ header .avatar{
     z-index: 1;
   }
   
-  .search-btn:hover {
-    transform: scale(1.2);
-    cursor: pointer;
-    color: black;
-  }
-  
-  .search-btn:focus {
-    outline:none;
-    color:black;
-  }
-  
 
 .dropdown{
     position: absolute;
@@ -274,4 +259,12 @@ header .avatar{
 
 .dropdown a:hover,.dropdown span:hover{
     background-color: #bd631a;
+}
+
+.searchcont{
+    position: absolute;
+    background-color: white;
+    width: 100%;
+    top: 50px;
+    z-index: 1;
 }
