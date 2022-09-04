@@ -115,13 +115,8 @@ app.post('/login',async(req,res)=>{
 //get user data
 app.get('/getme',protect,async(req,res)=>{
     try{
-        const {_id,UserName,Email,Role}=await User.findById(req.user.id);
-        res.status(200).json({
-            _id:_id,
-            UserName:UserName,
-            Email:Email,
-            Role:Role
-        })
+        const user=await User.findById(req.user.id).select("-Password -Role");
+        res.status(200).json(user)
     }catch(error)
     {
         console.log(error);

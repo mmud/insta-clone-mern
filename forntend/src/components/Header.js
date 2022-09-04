@@ -45,7 +45,9 @@ export default function Header() {
       ser();
       }
       else
-        setusers(null);
+        setTimeout(() => {
+          setusers(null);
+        }, 100);
     }, [search,issearch])
     
 

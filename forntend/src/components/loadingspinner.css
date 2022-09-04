@@ -3,6 +3,7 @@
     position: absolute;
     width: 80px;
     height: 80px;
+    z-index: 51;
   }
   .lds-ring div {
     box-sizing: border-box;
@@ -41,4 +42,5 @@
     bottom: 0;
     left: 0;
     background-color: #ffffff;
+    z-index: 50
   }

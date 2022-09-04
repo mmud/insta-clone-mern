@@ -1,0 +1,70 @@
+.userdata img{
+    width: 200px;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+    border: 1px solid #262626;
+}
+
+.userdata{
+    display: flex;
+    align-items: center;
+    margin-top: 70px;
+    justify-content: center;
+}
+
+.userdata .text{
+    margin-left: 50px;
+}
+
+.userdata .text .username{
+    font-size: 32px;
+    font-weight: bold;
+    color: #f48021;
+}
+
+.userdata .text .followers{
+    margin-top: 15px;
+    color: #262626;
+}
+
+.userdata .text .email{
+    margin-top: 15px;
+    color: #262626;
+    font-weight: bold;
+}
+
+.userdata .text .followers span:last-child{
+    margin-left: 15px;
+}
+
+.userdata .text .editbtn{
+    font-size: 16px;
+    margin-left: 50px;
+    border: 2px solid dodgerblue;
+    padding: 5px 10px;
+    color: dodgerblue;
+    cursor: pointer;
+}
+
+.userdata .text .editbtn:hover{
+    background-color: dodgerblue;
+    color: white;
+}
+
+@media (max-width:768px) {
+    .userdata{
+        flex-direction: column;
+    }
+
+    .userdata img{
+        margin-bottom: 20px;
+    }
+
+    .userdata .text{
+        text-align: center;
+        margin: 0;
+    }
+}

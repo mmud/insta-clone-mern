@@ -1,8 +1,7 @@
 import { useEffect,useState } from 'react';
 import './App.css';
-import {BrowserRouter , Route,Routes,Navigate,useNavigate } from "react-router-dom";
+import {BrowserRouter , Route,Routes,Navigate } from "react-router-dom";
 import Header from './components/Header.js';
-import Home from './screens/Home';
 import Profile from './screens/Profile';
 import Register from './screens/Register';
 import Login from './screens/Login';
@@ -10,6 +9,8 @@ import LoadingSpinner from './components/LoadingSpinner';
 import Admin from './screens/Admin';
 import Axios from "axios"
 import Error404 from './screens/Error404';
+import Landing from './screens/Landing';
+import User from './screens/User';
 
 function App() {
   const [islogedin, setislogedin] = useState(false)
@@ -19,12 +20,12 @@ function App() {
       'http://localhost:3500/api/auth/isloggedin',
       {headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }}
     ).then(response=>{
-      if(response.data == "not authorized")
+      if(response.data === "not authorized")
       {
         setislogedin(false);
         localStorage.setItem("token",null);
       }
-      else if (response.data == "logedin")
+      else if (response.data === "logedin")
       {
         setislogedin(true);
       }
@@ -63,8 +64,9 @@ function App() {
         loaded?
       <Routes>
         <Route path="*" exact element={<Error404/>} />
-        <Route path="/" exact element={<Home/>} />
+        <Route path="/" exact element={<Landing/>} />
         <Route path="/Error404" exact element={<Error404/>} />
+        <Route path="/user/:id" exact element={<User/>} />
         <Route path="/profile" exact element={islogedin?<Profile/>:<Navigate to="/login" replace={true}/>}/>
         <Route path="/admin" exact element={islogedin&&parseJwt(localStorage.getItem("token"))?.role==="admin"?<Admin/>:<Error404/>} />
         <Route path="/register" exact element={!islogedin?<Register/>:<Navigate to="/" replace={true}/>} />
