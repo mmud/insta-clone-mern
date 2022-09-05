@@ -17,9 +17,9 @@ app.post('/register',async(req,res)=>{
             return;
         }
         
-        if(UserName.toLowerCase().replace(/ /g,'').length<5)
+        if(UserName.toLowerCase().replace(/ /g,'').length<5|| UserName.toLowerCase().replace(/ /g,'').length>25)
         {
-            res.status(400).json({msg:"username less than 5 characters"});
+            res.status(400).json({msg:"username less than 5 characters or more than 25"});
             return;
         }
 
@@ -116,6 +116,19 @@ app.post('/login',async(req,res)=>{
 app.get('/getme',protect,async(req,res)=>{
     try{
         const user=await User.findById(req.user.id).select("-Password -Role");
+        res.status(200).json(user)
+    }catch(error)
+    {
+        console.log(error);
+        //res.status(500).json({msg:error.message});
+
+    }
+})
+
+//get user data
+app.get('/avatar',protect,async(req,res)=>{
+    try{
+        const user=await User.findById(req.user.id).select("avatar");
         res.status(200).json(user)
     }catch(error)
     {

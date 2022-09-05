@@ -2,7 +2,7 @@ import React,{useEffect, useRef, useState} from 'react'
 import "./header.css"
 import { NavLink,useNavigate,Link } from "react-router-dom";
 import shlogo from "../images/sh.png"
-import avatar from "../images/avatar.png"
+import avatardefault from "../images/avatar.png"
 import Axios from "axios"
 import UserSearchCard from './UserSearchCard';
 
@@ -50,7 +50,24 @@ export default function Header() {
         }, 100);
     }, [search,issearch])
     
+    //avatar
+    const [avatar, setavatar] = useState(null);
 
+    useEffect(() => {
+      const config = {
+       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+      };
+
+      Axios.get( 
+      `http://localhost:3500/api/auth/avatar`,
+      config,
+      ).then((Response)=>{
+        setavatar(Response.data.avatar);
+    }).catch(console.log);
+
+  }, [])
+  
+  
   return (
     <>
       <header>
@@ -73,7 +90,7 @@ export default function Header() {
               <li><NavLink to="/messages"><i className="fa-solid fa-comment"></i></NavLink></li>
               <li><Link to="#"><i className="fa-solid fa-bell"></i></Link></li>
               <div className='avatardiv' style={{"position":"relative"}}>
-                <img src={avatar} alt="avatar" className='avatar' onClick={()=>dropdown.current.classList.toggle("active")}/>
+                <img src={avatar?avatar:avatardefault} alt="avatar" className='avatar' onClick={()=>dropdown.current.classList.toggle("active")}/>
                 <div className='dropdown' ref={dropdown}>
                   {localStorage.getItem("token")!=="null"?<NavLink to="/profile"> profile </NavLink>:""}
                   {parseJwt(localStorage.getItem("token"))?.role==="admin"?<NavLink to="/admin"> admin </NavLink>:""}
