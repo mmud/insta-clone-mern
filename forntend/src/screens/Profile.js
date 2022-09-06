@@ -190,7 +190,9 @@ export default function Profile() {
                       <img src={userdata?.avatar} className="avatar" alt="avatar"/>
                       <div className='text'>
                           <div className='username'>{userdata?.UserName}<button className='editbtn' onClick={openeditform}>Edit Profile</button></div>
-                          <div className='followers'><span>{userdata?.followers.length} Followers</span> <span> {userdata?.following.length} Following</span></div>
+                          <div className='followers'><span>{userdata?.followers.length>=1000000?(userdata?.followers.length / 1000000).toFixed(1).replace(/\.0$/, '') + 'M':userdata?.followers.length>=1000?(userdata?.followers.length / 1000).toFixed(1).replace(/\.0$/, '') + 'K':userdata?.followers.length} Followers</span>
+                                                        <span> {userdata?.following.length>=1000000?(userdata?.following.length / 1000000).toFixed(1).replace(/\.0$/, '') + 'M':userdata?.following.length>=1000?(userdata?.following.length / 1000).toFixed(1).replace(/\.0$/, '') + 'K':userdata?.following.length} Following</span>
+                          </div>
                           <div className='email'>{userdata?.Email}</div>
                       </div>
                   </div>

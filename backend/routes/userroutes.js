@@ -78,4 +78,78 @@ app.post('/updateuser',protect,async(req,res)=>{
     }
 })
 
+app.post('/follow',protect,async(req,res)=>{
+    try{
+        //data check
+        const {id} = req.body;
+
+        if(!id)
+        {
+            res.status(400).json({msg:"need data"});
+            return;
+        }
+        
+        const user = await User.find({_id:id,followers:req.user._id});
+        if(user.length>0) return res.status(500).json({msg:"You followed this user"})
+    
+        await User.findOneAndUpdate({_id:id},{$push:{followers:req.user._id}},{new:true});
+        await User.findOneAndUpdate({_id:req.user._id},{$push:{following:id}},{new:true});
+    
+        res.status(200).json({msg:"done"});
+    }
+    catch(error)
+    {
+        console.log(error);
+        //res.status(500).json({msg:error.message});
+    }
+})
+
+app.post('/unfollow',protect,async(req,res)=>{
+    try{
+        //data check
+        const {id} = req.body;
+
+        if(!id)
+        {
+            res.status(400).json({msg:"need data"});
+            return;
+        }
+
+        await User.findOneAndUpdate({_id:id},{$pull:{followers:req.user._id}},{new:true});
+        await User.findOneAndUpdate({_id:req.user._id},{$pull:{following:id}},{new:true});
+    
+        res.status(200).json({msg:"done"});
+    }
+    catch(error)
+    {
+        console.log(error);
+        //res.status(500).json({msg:error.message});
+    }
+})
+
+app.post('/isfollowed',protect,async(req,res)=>{
+    try{
+        //data check
+        const {id} = req.body;
+
+        if(!id)
+        {
+            res.status(400).json({msg:"need data"});
+            return;
+        }
+        
+        const user = await User.find({_id:id,followers:req.user._id});
+        if(user.length>0)  res.status(200).json({msg:"followed"})
+        else { 
+            res.status(400).json({msg:"not followed"});
+        }
+    
+    }
+    catch(error)
+    {
+        console.log(error);
+        //res.status(500).json({msg:error.message});
+    }
+})
+
 module.exports = app;
