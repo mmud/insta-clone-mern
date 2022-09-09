@@ -11,6 +11,7 @@ import Axios from "axios"
 import Error404 from './screens/Error404';
 import Landing from './screens/Landing';
 import User from './screens/User';
+import Home from './screens/Home';
 
 function App() {
   const [islogedin, setislogedin] = useState(false)
@@ -64,7 +65,7 @@ function App() {
         loaded?
       <Routes>
         <Route path="*" exact element={<Error404/>} />
-        <Route path="/" exact element={<Landing/>} />
+        <Route path="/" exact element={islogedin?<Home/>:<Landing/>} />
         <Route path="/Error404" exact element={<Error404/>} />
         <Route path="/user/:id" exact element={<User/>} />
         <Route path="/profile" exact element={islogedin?<Profile/>:<Navigate to="/login" replace={true}/>}/>

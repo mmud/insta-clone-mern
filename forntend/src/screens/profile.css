@@ -50,7 +50,7 @@
 
 .editform form{
     box-shadow: none;
-    margin: 50px auto;
+    margin: 0;
 }
 
 .editform textarea{

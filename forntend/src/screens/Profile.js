@@ -201,7 +201,7 @@ export default function Profile() {
                     <div className='closeform' onClick={closeeditform}>&times;</div>
                     <form>
                         <div style={{"position":"relative","display":"flex","justifyContent":"center"}}>
-                            <input type="file" onChange={avatarchange} id="upload" name='avatar' hidden/>
+                            <input type="file" onChange={avatarchange} id="upload" name='avatar' accept='image/*' hidden/>
                             <label htmlFor="upload" className='uploadbtn'><i className="fa-solid fa-camera"></i></label>
                             <img src={avatar?avatar: userdata?.avatar} ref={img} alt="avatar"/>
                         </div>
