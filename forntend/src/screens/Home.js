@@ -113,7 +113,7 @@ export default function Home() {
   }
 
   const [inputs,setInputs] = useState({
-    discription:""
+    Content:""
   })
 
   const handleChange=(e)=>{
@@ -123,26 +123,42 @@ export default function Home() {
     }))
   }
 
+  const spinner = useRef(null)
 
   const submithandler= async(e)=>{
     e.preventDefault();
+    e.target.disabled=true;
+    spinner.current.style.display="inline-block";
 
-    console.log(images);
 
-    // const config = {
-    //     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
-    // };
+    const config = {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    };
 
-    // const bodyParameters = {
-    // avatar: avatar,
-    // ...inputs
-    // };
+    const bodyParameters = {
+    images: images,
+    ...inputs
+    };
 
-    // await Axios.post( 
-    // 'http://localhost:3500/api/user/updateuser',
-    // bodyParameters,
-    // config
-    // ).then(()=>window.location.reload()).catch(e=>{errormsg(e.response.data.msg);console.log(e)});
+    await Axios.post( 
+    'http://localhost:3500/api/post',
+    bodyParameters,
+    config
+    ).then((response)=>{
+      console.log(response);
+      if(response.data.msg ==="done")
+      {
+        disinput.current.value="";
+        setimages([]);
+        setInputs({
+          Content:""
+        })
+        closeeditform();
+        e.target.disabled=false;
+        spinner.current.style.display="none";
+    
+      }
+    }).catch(e=>{errormsg(e.response.data.msg);console.log(e)});
 
 
   }
@@ -161,7 +177,7 @@ export default function Home() {
     <div className='editform home' ref={theform}>
         <div className='closeform' onClick={closeeditform}>&times;</div>
         <form>
-            <textarea placeholder="discription" name='discription' ref={disinput} onChange={handleChange}/>
+            <textarea placeholder="Content" name='Content' ref={disinput} onChange={handleChange}/>
             <div className='showimage'>
                 {
                     images.map((img,index)=>(
@@ -176,6 +192,7 @@ export default function Home() {
                 <input type="file" onChange={avatarchange} id="upload" name='avatar' accept='image/*' multiple hidden/>
                 <label htmlFor="upload" className='uploadbtn'><i className="fa-solid fa-camera"></i></label>
             </div>
+            <div className="lds-spinner" ref={spinner}><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
             <button onClick={submithandler}>Submit</button>
         </form>
     </div>

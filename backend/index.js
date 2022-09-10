@@ -6,8 +6,8 @@ const cors = require("cors");
 
 //server
 const app=express();
-app.use(express.json());
-app.use(express.urlencoded({extended:false}));
+app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({limit: '50mb',extended:false}));
 app.listen(process.env.PORT,()=>{console.log('server is running');})
 app.use(cors({
     origin: 'http://localhost:3000'
@@ -29,3 +29,4 @@ connectDB();
 //routes
 app.use("/api/auth", require("./routes/authroutes"));
 app.use("/api/user", require("./routes/userroutes"));
+app.use("/api/post", require("./routes/postroutes"));

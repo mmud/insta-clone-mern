@@ -6,7 +6,6 @@ import avatardefault from "../images/avatar.png"
 import Axios from "axios"
 import UserSearchCard from './UserSearchCard';
 
-
 export default function Header() {
   const Navigate = useNavigate();
   const sidenav = useRef(null)
@@ -52,7 +51,6 @@ export default function Header() {
     
     //avatar
     const [avatar, setavatar] = useState(null);
-
     useEffect(() => {
       const config = {
        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }

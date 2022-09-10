@@ -146,10 +146,11 @@ export default function Profile() {
         [e.target.name]: e.target.value
     }))
   }
-
+  const spinner = useRef(null)
   const submithandler= async(e)=>{
     e.preventDefault();
-
+    e.target.disabled=true;
+    spinner.current.style.display="inline-block";
     const config = {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
     };
@@ -208,6 +209,7 @@ export default function Profile() {
                         <input type="text" placeholder="name" name='UserName' ref={nameinput} onChange={handleChange}/>
                         <input type="text" placeholder="email" name='Email' ref={emailinput} onChange={handleChange}/>
                         <textarea placeholder="discription" name='discription' ref={disinput} onChange={handleChange}/>
+                        <div class="lds-spinner" ref={spinner}><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
                         <button onClick={submithandler}>Submit</button>
                     </form>
                   </div>
