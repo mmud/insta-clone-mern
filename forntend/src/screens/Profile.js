@@ -47,12 +47,12 @@ export default function Profile() {
         nameinput.current.value= Response.data.UserName;
         emailinput.current.value= Response.data.Email;
         disinput.current.value= Response.data.discription;
+        setloading(false);
 
     }).catch((e)=>{
           if(e.response.data.msg =="Not Found")
               setnotfound(true);
       });
-      setloading(false);
 
   }, [id])
   
@@ -169,7 +169,7 @@ export default function Profile() {
 
   }
 
-  if(loading)
+  if(loading && userdata)
   {
       return(
           <LoadingSpinner/>
@@ -209,7 +209,7 @@ export default function Profile() {
                         <input type="text" placeholder="name" name='UserName' ref={nameinput} onChange={handleChange}/>
                         <input type="text" placeholder="email" name='Email' ref={emailinput} onChange={handleChange}/>
                         <textarea placeholder="discription" name='discription' ref={disinput} onChange={handleChange}/>
-                        <div class="lds-spinner" ref={spinner}><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                        <div className="lds-spinner" ref={spinner}><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
                         <button onClick={submithandler}>Submit</button>
                     </form>
                   </div>

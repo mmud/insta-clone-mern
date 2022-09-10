@@ -1,0 +1,78 @@
+.post{
+    width: 600px;
+    margin: 40px auto;
+    background-color: white;
+    box-shadow: 0 0 5px #ddd;
+    padding: 20px;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+    position: relative;
+}
+
+.post .postheader{
+    display: flex;
+    align-items: center;
+}
+
+.post .postheader .name{
+    margin-left: 10px;
+    font-weight: bold;
+    color: #333;
+}
+
+.post .postheader .name:hover{
+    text-decoration: underline;
+}
+
+.post .postheader .date{
+    color: #999;
+    margin-left: 10px;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.post .fa-ellipsis{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+}
+
+.post .togglemenu{
+    position: absolute;
+    background-color: white;
+    box-shadow: 0 0 5px #ddd;
+    z-index: 1;
+    top: 40px;
+    right: 20px;
+    display: none;
+}
+
+.post .togglemenu.active{
+    display: block;
+}
+
+.post .togglemenu .option{
+    color: #555;
+    cursor: pointer;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+    padding: 10px;
+}
+
+.post .togglemenu .option:hover{
+    background-color: #333;
+    color: white;
+}
+
+@media (max-width:600px) {
+    .post{
+        width: calc( 100% - 10px ) !important;
+    }
+  }

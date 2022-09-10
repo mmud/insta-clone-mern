@@ -28,4 +28,15 @@ app.post('/',protect,async(req,res)=>{
     }
 })
 
+app.get('/',protect,async(req,res)=>{
+    try {
+        const posts = await Post.find({user:[...req.user.following, req.user._id]})
+        .populate("user likes","avatar UserName _id")
+        res.status(200).json({result:posts.length,posts});
+    
+    } catch (error) {
+        console.log(error);
+    }
+})
+
 module.exports = app;

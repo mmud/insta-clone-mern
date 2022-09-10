@@ -26,7 +26,7 @@ export default function User() {
 
     useEffect(() => {
         if(id == parseJwt(localStorage.getItem("token"))?.id)
-            navigate("/profile");
+            navigate("/profile",{replace:true});
         setnotfound(false);
 
         Axios.get( 

@@ -1,6 +1,7 @@
 import  Axios  from 'axios';
 import React, { useEffect, useRef, useState } from 'react'
 import Swal from 'sweetalert2';
+import Post from '../components/Post';
 import "./home.css"
 
 export default function Home() {
@@ -12,14 +13,15 @@ export default function Home() {
       const config = {
        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
       };
-
-      Axios.get( 
-      `http://localhost:3500/api/auth/avatar`,
-      config,
-      ).then((Response)=>{
-        setavatar(Response.data.avatar);
-    }).catch(console.log);
-
+      const asyncfun=async ()=>{
+        await Axios.get( 
+        `http://localhost:3500/api/auth/avatar`,
+        config,
+        ).then((Response)=>{
+          setavatar(Response.data.avatar);
+      }).catch(console.log);
+    }
+    asyncfun();
   }, [])
 
     //sendpost
@@ -159,10 +161,28 @@ export default function Home() {
     
       }
     }).catch(e=>{errormsg(e.response.data.msg);console.log(e)});
-
-
   }
   
+
+  //show posts
+  const [posts, setposts] = useState([])
+  const [loadposts, setloadposts] = useState(false)
+  useEffect(() => {
+    const config = {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    };
+    const asyncfun=async()=>{
+      await Axios.get( 
+      'http://localhost:3500/api/post',
+      config
+      ).then((response)=>{ setTimeout(() => {
+        setposts(response.data.posts)
+        setloadposts(true);
+      }, 10);}).catch(e=>{errormsg(e.response.data.msg);console.log(e)});
+    }
+    asyncfun();
+  }, [])
+  console.log(loadposts);
   return (
     <>
     <div className='container'>
@@ -171,6 +191,14 @@ export default function Home() {
             <button className='statusbtn' onClick={openeditform}>
                 What are you thinking?
             </button>
+        </div>
+        <div className='posts' style={{"position":"relative"}}>
+          {
+          loadposts?
+            posts.map((post,i)=>{
+              return <Post key={`post${i}`} postdata={post}></Post>
+            }):<div className="lds-ring main"><div></div><div></div><div></div><div></div></div>
+        }
         </div>
     </div>
     <div className='overlaye' ref={theoverlay}></div>

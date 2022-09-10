@@ -32,15 +32,8 @@ function App() {
       }
       setloaded(true);
     }).catch(e=>{
-      if(e.response.data === "not authorized")
-      {
         setislogedin(false);
         localStorage.setItem("token",null);
-      }
-      else if (e.response.data === "logedin")
-      {
-        setislogedin(true);
-      }
       setloaded(true);
     })
   }, [])
