@@ -200,6 +200,53 @@ const submithandler= async(e)=>{
   }).catch(e=>{errormsg(e.response.data.msg);console.log(e)});
 }
 
+
+    //like
+    useEffect(() => {
+    if(props.postdata.likes.find(like=>like._id == parseJwt(localStorage.getItem("token")).id ))
+        setislike(true);
+    }, [])
+    
+
+    const [islike, setislike] = useState(false)
+
+    const handleunlike = async()=>{
+
+        const config = {
+            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+        };
+        const bodyParameters = {
+        _id:props.postdata._id,
+        };
+      
+        await Axios.post( 
+        'http://localhost:3500/api/post/unlike',
+        bodyParameters,
+        config
+        ).then((response)=>{}).catch(e=>console.log(e));
+
+        setislike(false);
+        props.postdata.likes.pop();
+    }
+
+    const handlelike = async()=>{
+        const config = {
+            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+        };
+        const bodyParameters = {
+        _id:props.postdata._id,
+        };
+      
+        await Axios.post( 
+        'http://localhost:3500/api/post/like',
+        bodyParameters,
+        config
+        ).then((response)=>{}).catch(e=>console.log(e));
+
+        props.postdata.likes.push( parseJwt(localStorage.getItem("token")).id);
+        setislike(true);
+
+    }
   return (
     <>
     <div className="post">
@@ -245,7 +292,7 @@ const submithandler= async(e)=>{
 
         <div className='postfooter'>
                 <div className='icons'>
-                    <i className="fa-regular fa-heart"></i>
+                    {islike?<i className="fa-solid fa-heart" style={{"color":"#f48021"}} onClick={handleunlike}></i>:<i className="fa-regular fa-heart" onClick={handlelike}></i>}
                     <Link to={`/post/${props.postdata._id}`}>
                     <i className="fa-regular fa-comment"></i>
                     </Link>

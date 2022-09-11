@@ -3,7 +3,8 @@ const app = express.Router();
 const User = require('../models/UserModel');
 const Post = require('../models/PostModel');
 const mongoose = require("mongoose")
-const {protect}= require("../authMiddleware")
+const {protect}= require("../authMiddleware");
+const { findOne } = require('../models/UserModel');
 
 
 app.post('/',protect,async(req,res)=>{
@@ -44,6 +45,8 @@ app.post('/edit',protect,async(req,res)=>{
     try {
         const { Content,images,_id,userid } = req.body;
 
+        const p= await Post.findOne({_id}); 
+
         if((!Content ||  Content.toLowerCase().replace(/ /g,'').length==0))
         {
             if( images==[]){
@@ -52,7 +55,7 @@ app.post('/edit',protect,async(req,res)=>{
             }
         }
 
-        if(userid!=req.user._id)
+        if(userid!=p.user)
         {
             res.status(400).json({msg:"that not your post"})
             return
@@ -62,6 +65,50 @@ app.post('/edit',protect,async(req,res)=>{
         const post = await Post.findOneAndUpdate({_id},{
             Content,images
         });
+
+        res.status(200).json({msg:"done"});
+    
+        } catch (error) {
+        console.log(error);
+    }
+})
+
+app.post('/like',protect,async(req,res)=>{
+    try {
+        const { _id } = req.body;
+
+        const post = await Post.find({_id,likes:req.user._id})
+        
+        if(post.length>0)
+        {
+            res.status(400).json({msg:"you liked this post"})
+        }
+
+        await Post.findOneAndUpdate({_id},{
+            $push:{likes:req.user._id}
+        },{new:true});
+
+        res.status(200).json({msg:"done"});
+    
+        } catch (error) {
+        console.log(error);
+    }
+})
+
+app.post('/unlike',protect,async(req,res)=>{
+    try {
+        const { _id } = req.body;
+
+        const post = await Post.find({_id,likes:req.user._id})
+        
+        if(post.length<=0)
+        {
+            res.status(400).json({msg:"you unliked this post"})
+        }
+
+        await Post.findOneAndUpdate({_id},{
+            $pull:{likes:req.user._id}
+        },{new:true});
 
         res.status(200).json({msg:"done"});
     
