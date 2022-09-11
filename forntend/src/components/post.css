@@ -1,3 +1,5 @@
+@import "~react-image-gallery/styles/css/image-gallery.css";
+
 .post{
     width: 600px;
     margin: 40px auto;
@@ -69,6 +71,62 @@
 .post .togglemenu .option:hover{
     background-color: #333;
     color: white;
+}
+
+.post .postbody .images img{
+    width: 100%;
+}
+
+.image-gallery-icon{
+    transition: none;
+    -webkit-transition: none;
+    -moz-transition: none;
+    -ms-transition: none;
+    -o-transition: none;
+}
+
+.image-gallery-icon .image-gallery-svg{
+    width: 30px;
+}
+
+.image-gallery-icon:hover{
+    color: #f48021
+}
+
+.image-gallery-icon:hover .image-gallery-svg{
+    transform: scale(1);
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    -ms-transform: scale(1);
+    -o-transform: scale(1);
+}
+
+.image-gallery-bullets .image-gallery-bullet{
+    box-shadow: none;
+    border-color: #f48021;
+}
+
+.image-gallery-bullets .image-gallery-bullet.active{
+    background-color: #f48021;
+}
+
+.postbody .content .readmore{
+    font-weight: bolder;
+    cursor: pointer;
+}
+
+.postbody .content .readmore:hover{
+    text-decoration: underline;
+}
+
+.postfooter .poststatus{
+    display: flex;
+    justify-content: space-between;
+}
+
+.postfooter i {
+    font-size: 20px;
+    margin: 10px 10px 10px 0;
 }
 
 @media (max-width:600px) {

@@ -61,6 +61,7 @@ export default function Header() {
       config,
       ).then((Response)=>{
         setavatar(Response.data.avatar);
+        localStorage.setItem("avatar",Response.data.avatar)
     }).catch(console.log);
 
   }, [])

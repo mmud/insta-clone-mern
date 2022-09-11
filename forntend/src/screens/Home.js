@@ -5,26 +5,11 @@ import Post from '../components/Post';
 import "./home.css"
 
 export default function Home() {
-    //avatar
-    const [avatar, setavatar] = useState(null);
-    const disinput = useRef(null)
-
-    useEffect(() => {
-      const config = {
-       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
-      };
-      const asyncfun=async ()=>{
-        await Axios.get( 
-        `http://localhost:3500/api/auth/avatar`,
-        config,
-        ).then((Response)=>{
-          setavatar(Response.data.avatar);
-      }).catch(console.log);
-    }
-    asyncfun();
-  }, [])
-
-    //sendpost
+  
+  
+  
+  //sendpost
+  const disinput = useRef(null)
     const errormsg=(errormsg)=>{
         const Toast = Swal.mixin({
             toast: true,
@@ -187,12 +172,12 @@ export default function Home() {
     <>
     <div className='container'>
         <div className='status'>
-            <img src={avatar} alt="avatar" className='avatar'/>
+            <img src={localStorage.getItem("avatar")} alt="avatar" className='avatar'/>
             <button className='statusbtn' onClick={openeditform}>
                 What are you thinking?
             </button>
         </div>
-        <div className='posts' style={{"position":"relative"}}>
+        <div className='posts'>
           {
           loadposts?
             posts.map((post,i)=>{
