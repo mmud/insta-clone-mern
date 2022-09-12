@@ -247,6 +247,27 @@ const submithandler= async(e)=>{
         setislike(true);
 
     }
+
+    //comments
+    const [commentcontent, setcommentcontent] = useState("")
+
+    const handlesendcomment=async()=>{
+        const config = {
+            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+        };
+        const bodyParameters = {
+        postId:props.postdata._id,
+        Content:commentcontent
+        };
+        console.log(bodyParameters);
+        await Axios.post( 
+        'http://localhost:3500/api/post/comment',
+        bodyParameters,
+        config
+        ).then((response)=>{console.log(response)}).catch(e=>console.log(e));
+
+    }
+    
   return (
     <>
     <div className="post">
@@ -311,7 +332,20 @@ const submithandler= async(e)=>{
         </div>
         :""
         }
+    
+
+
+        <div className='commentinput'>
+            <input type="text" placeholder='Add your comment' onChange={(e)=>setcommentcontent(e.target.value)} />
+            
+            {
+                commentcontent.trim().length>0?<button className='active sendcomment' onClick={handlesendcomment}>send</button>:<button className='sendcomment'>send</button>
+            }
+        </div>
+    
+    
     </div>
+
     {onedit?
     <>
     <div className='overlaye' ref={theoverlay}></div>

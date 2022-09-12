@@ -2,6 +2,7 @@ const express = require('express');
 const app = express.Router();
 const User = require('../models/UserModel');
 const Post = require('../models/PostModel');
+const Comment = require('../models/CommentModel');
 const mongoose = require("mongoose")
 const {protect}= require("../authMiddleware");
 const { findOne } = require('../models/UserModel');
@@ -34,6 +35,7 @@ app.get('/',protect,async(req,res)=>{
         const posts = await Post.find({user:[...req.user.following, req.user._id]})
         .sort("-createdAt")
         .populate("user likes","avatar UserName _id")
+        .populate({path:"comments",populate:{path:"user"}})
         res.status(200).json({result:posts.length,posts});
     
     } catch (error) {
@@ -116,5 +118,32 @@ app.post('/unlike',protect,async(req,res)=>{
         console.log(error);
     }
 })
+
+app.post('/comment',protect,async(req,res)=>{
+    try {
+        const { Content,postId } = req.body;
+
+        if((!Content ||  Content.toLowerCase().replace(/ /g,'').length==0))
+        {
+           
+            res.status(400).json({msg:"need data"});
+            return;
+            
+        }
+        const newcomment = await Comment.create({
+            Content,user:req.user._id
+        });
+
+        await Post.findOneAndUpdate({_id:postId},{
+            $push:{comments:newcomment._id}
+        },{new:true})
+
+        res.status(200).json({msg:"done"});
+    
+        } catch (error) {
+        console.log(error);
+    }
+})
+
 
 module.exports = app;
