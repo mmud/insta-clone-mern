@@ -112,12 +112,12 @@
     background-color: #f48021;
 }
 
-.postbody .content .readmore{
+.readmore{
     font-weight: bolder;
     cursor: pointer;
 }
 
-.postbody .content .readmore:hover{
+.readmore:hover{
     text-decoration: underline;
 }
 
@@ -165,12 +165,12 @@
     -ms-border-radius: 5px;
     -o-border-radius: 5px;
     color: #f48021;
-    cursor: pointer;
 }
 
 .post .commentinput .sendcomment.active{
     background-color: #f48021;
     color: white;
+    cursor: pointer;
 }
 
 @media (max-width:650px) {

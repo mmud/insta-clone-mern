@@ -5,6 +5,7 @@ import moment from 'moment/moment';
 import ImageGallery from 'react-image-gallery';
 import Swal from 'sweetalert2';
 import  Axios  from 'axios';
+import Comment from './Comment';
 
 export default function Post(props) {
     const dropdown = useRef(null)
@@ -250,6 +251,7 @@ const submithandler= async(e)=>{
 
     //comments
     const [commentcontent, setcommentcontent] = useState("")
+    const commentinput = useRef(null)
 
     const handlesendcomment=async()=>{
         const config = {
@@ -264,7 +266,13 @@ const submithandler= async(e)=>{
         'http://localhost:3500/api/post/comment',
         bodyParameters,
         config
-        ).then((response)=>{console.log(response)}).catch(e=>console.log(e));
+        ).then((response)=>{
+            if(response.data.msg == "done")
+            {
+                setcommentcontent("");
+                commentinput.current.value="";
+            }
+        }).catch(e=>console.log(e));
 
     }
     
@@ -324,19 +332,30 @@ const submithandler= async(e)=>{
                 </div>
         </div>
 
-        <i className="fa-solid fa-ellipsis" onClick={()=>dropdown.current.classList.toggle("active")}></i>
         {props.postdata.user._id ===  parseJwt(localStorage.getItem("token")).id?
+        
+        <>
+        <i className="fa-solid fa-ellipsis" onClick={()=>dropdown.current.classList.toggle("active")}></i>
         <div className='togglemenu' ref={dropdown}>
             <div className='option' onClick={handleeditpost}><i className="fa-solid fa-pen"></i> Edit Post</div>
             <div className='option'><i className="fa-solid fa-trash"></i> Delete Post</div>
         </div>
+        </>
         :""
         }
+
+        <div className='comments'>
+            {
+                props.postdata.comments.map((comment,i)=>{
+                    return <Comment post={props.postdata} comment={comment}/>
+                })
+            }
+        </div>
     
 
 
         <div className='commentinput'>
-            <input type="text" placeholder='Add your comment' onChange={(e)=>setcommentcontent(e.target.value)} />
+            <input type="text" placeholder='Add your comment' onChange={(e)=>setcommentcontent(e.target.value)} ref={commentinput} />
             
             {
                 commentcontent.trim().length>0?<button className='active sendcomment' onClick={handlesendcomment}>send</button>:<button className='sendcomment'>send</button>
