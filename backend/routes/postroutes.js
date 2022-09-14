@@ -57,7 +57,7 @@ app.post('/edit',protect,async(req,res)=>{
             }
         }
 
-        if(userid!=p.user)
+        if(req.user._id.toString()!==p.user.toString())
         {
             res.status(400).json({msg:"that not your post"})
             return
@@ -145,5 +145,78 @@ app.post('/comment',protect,async(req,res)=>{
     }
 })
 
+app.post('/editcomment',protect,async(req,res)=>{
+    try {
+        const { Content,_id } = req.body;
+
+        const p= await Comment.findOne({_id}); 
+
+        if((!Content ||  Content.toLowerCase().replace(/ /g,'').length==0))
+        {
+            res.status(400).json({msg:"need data"})
+            return;
+        }
+
+        if(req.user._id.toString()!=p.user.toString())
+        {
+            res.status(400).json({msg:"that not your comment"})
+            return
+        }
+
+
+        const post = await Comment.findOneAndUpdate({_id},{
+            Content
+        });
+
+        res.status(200).json({msg:"done"});
+    
+        } catch (error) {
+        console.log(error);
+    }
+})
+
+app.post('/likecomment',protect,async(req,res)=>{
+    try {
+        const { _id } = req.body;
+
+        const com = await Comment.find({_id,likes:req.user._id})
+        
+        if(com.length>0)
+        {
+            res.status(400).json({msg:"you liked this comment"})
+        }
+
+        await Comment.findOneAndUpdate({_id},{
+            $push:{likes:req.user._id}
+        },{new:true});
+
+        res.status(200).json({msg:"done"});
+    
+        } catch (error) {
+        console.log(error);
+    }
+})
+
+app.post('/unlikecomment',protect,async(req,res)=>{
+    try {
+        const { _id } = req.body;
+
+        const com = await Comment.find({_id,likes:req.user._id})
+        
+        if(com.length<=0)
+        {
+            res.status(400).json({msg:"you unliked this comment"})
+        }
+
+        await Comment.findOneAndUpdate({_id},{
+            $pull:{likes:req.user._id}
+        },{new:true});
+
+        res.status(200).json({msg:"done"});
+    
+        } catch (error) {
+        console.log(error);
+    }
+})
 
 module.exports = app;

@@ -246,7 +246,6 @@ const submithandler= async(e)=>{
 
         props.postdata.likes.push( parseJwt(localStorage.getItem("token")).id);
         setislike(true);
-
     }
 
     //comments
@@ -275,6 +274,19 @@ const submithandler= async(e)=>{
         }).catch(e=>console.log(e));
 
     }
+    
+
+    //show comments
+    const [comments, setcomments] = useState([]);
+    const [showcomments, setshowcomments] = useState([]);
+    const [nextcomment, setnextcomment] = useState(2)
+
+    useEffect(() => {
+        const newCm=props.postdata.comments.filter(cm=>!cm.reply)
+        setcomments(newCm);
+        setshowcomments(newCm.slice(newCm.length - nextcomment));
+      
+    }, [props.postdata.comments,nextcomment])
     
   return (
     <>
@@ -346,9 +358,19 @@ const submithandler= async(e)=>{
 
         <div className='comments'>
             {
-                props.postdata.comments.map((comment,i)=>{
-                    return <Comment post={props.postdata} comment={comment}/>
+                showcomments.map((comment,i)=>{
+                    return <Comment post={props.postdata} comment={comment} key={i}/>
                 })
+            }
+            {
+                comments.length - nextcomment > 0 ?
+                <div className='readmore' onClick={()=>setnextcomment(nextcomment+10)}>
+                    see more comments ...
+                </div>
+                : comments.length>2 && 
+                <div className='readmore' onClick={()=>setnextcomment(2)}>
+                    hide comments ...
+                </div>
             }
         </div>
     
