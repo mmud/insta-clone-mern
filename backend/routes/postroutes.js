@@ -131,7 +131,7 @@ app.post('/comment',protect,async(req,res)=>{
             
         }
         const newcomment = await Comment.create({
-            Content,user:req.user._id
+            Content,user:req.user._id,postid:postId
         });
 
         await Post.findOneAndUpdate({_id:postId},{
@@ -211,6 +211,32 @@ app.post('/unlikecomment',protect,async(req,res)=>{
         await Comment.findOneAndUpdate({_id},{
             $pull:{likes:req.user._id}
         },{new:true});
+
+        res.status(200).json({msg:"done"});
+    
+        } catch (error) {
+        console.log(error);
+    }
+})
+
+app.post('/deletecomment',protect,async(req,res)=>{
+    try {
+        const { _id } = req.body;
+
+        const p= await Comment.findOne({_id}); 
+
+        if(req.user._id.toString()!=p.user.toString())
+        {
+            res.status(400).json({msg:"that not your comment"})
+            return
+        }
+
+        const post = await Post.findOneAndUpdate({_id:p.postid},{
+            $pull:{comments:_id}
+        });
+        
+        await Comment.findOneAndDelete({_id});
+
 
         res.status(200).json({msg:"done"});
     

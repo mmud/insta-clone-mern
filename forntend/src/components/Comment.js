@@ -129,8 +129,25 @@ export default function Comment({post,comment}) {
         comment.likes.pop();
     }
 
+    //delete
+    const [isdelete, setisdelete] = useState(false)
+    const handledelete=async()=>{
+        const config = {
+            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+        };
+        const bodyParameters = {
+        _id:comment._id,
+        };
+      
+        await Axios.post( 
+        'http://localhost:3500/api/post/deletecomment',
+        bodyParameters,
+        config
+        ).then((response)=>{setisdelete(true)}).catch(e=>console.log(e));
+    }
+
   return (
-    <div className='comment'>
+    <div className={isdelete?"comment none":'comment'}>
         <Link to={`/user/${comment.user._id}`} className="userstatus">
             <img src={comment.user.avatar} alt="commentavatar" className='avatar'/>
             <h6>{comment.user.UserName}</h6>
@@ -182,28 +199,23 @@ export default function Comment({post,comment}) {
                     </small>
                     }
 
-                    <small style={{"fontWeight":"bold","cursor":"pointer"}}>
-                        reply
-                    </small>
                 </>
             }
         </div>
-
-
 
         {post.user._id ===  parseJwt(localStorage.getItem("token")).id && comment.user._id ===  parseJwt(localStorage.getItem("token")).id?
         <>
         <i className="fa-solid fa-ellipsis" onClick={()=>dropdown.current.classList.toggle("active")}></i>
         <div className='togglemenu' ref={dropdown}>
             <div className='option' onClick={opencommentedit}><i className="fa-solid fa-pen" ></i> Edit Comment</div>
-            <div className='option'><i className="fa-solid fa-trash"></i> Delete Comment</div>
+            <div className='option' onClick={handledelete}><i className="fa-solid fa-trash"></i> Delete Comment</div>
         </div>
         </>
         :post.user._id ===  parseJwt(localStorage.getItem("token")).id && comment.user._id !==  parseJwt(localStorage.getItem("token")).id?
         <>
         <i className="fa-solid fa-ellipsis" onClick={()=>dropdown.current.classList.toggle("active")}></i>
         <div className='togglemenu' ref={dropdown}>
-            <div className='option'><i className="fa-solid fa-trash"></i> Delete Comment</div>
+            <div className='option' onClick={handledelete}><i className="fa-solid fa-trash"></i> Delete Comment</div>
         </div>
         </>
         :post.user._id !==  parseJwt(localStorage.getItem("token")).id && comment.user._id ==  parseJwt(localStorage.getItem("token")).id?
@@ -211,7 +223,7 @@ export default function Comment({post,comment}) {
         <i className="fa-solid fa-ellipsis" onClick={()=>dropdown.current.classList.toggle("active")}></i>
         <div className='togglemenu' ref={dropdown}>
             <div className='option' onClick={opencommentedit}><i className="fa-solid fa-pen"></i> Edit Comment</div>
-            <div className='option'><i className="fa-solid fa-trash"></i> Delete Comment</div>
+            <div className='option' onClick={handledelete}><i className="fa-solid fa-trash"></i> Delete Comment</div>
         </div></>:""
     }
     </div>

@@ -32,3 +32,7 @@
     -o-border-radius: 10px;
     border-top-left-radius: 0;
 }
+
+.none{
+    display: none;
+}

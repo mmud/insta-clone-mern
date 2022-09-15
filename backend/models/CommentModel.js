@@ -5,9 +5,9 @@ const CommentSchema = mongoose.Schema({
         type:String,
         required:true
     },
-    reply:mongoose.Types.ObjectId,
     likes:[{type:mongoose.Types.ObjectId,ref:'User'}],
-    user:{type:mongoose.Types.ObjectId,ref:'User'}
+    user:{type:mongoose.Types.ObjectId,ref:'User'},
+    postid:mongoose.Types.ObjectId,
 },
 {
     timestamps:true
