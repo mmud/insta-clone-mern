@@ -2,7 +2,9 @@ import Axios from 'axios';
 import React,{useState,useEffect} from 'react'
 import { useParams } from 'react-router'
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import LoadingSpinner from '../components/LoadingSpinner';
+import Post from '../components/Post';
 import "./user.css"
 
 export default function User() {
@@ -120,6 +122,44 @@ export default function User() {
         setfollowed(false);
     }
 
+    const errormsg=(errormsg)=>{
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer)
+              toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+          })
+          
+          Toast.fire({
+            icon: 'error',
+            title: errormsg
+          })
+      }
+
+     //show posts
+   const [posts, setposts] = useState([])
+   const [loadposts, setloadposts] = useState(false)
+   useEffect(() => {
+     const config = {
+       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+     };
+     const asyncfun=async()=>{
+       await Axios.get( 
+       `http://localhost:3500/api/post/getuserpostes/${id}`,
+       config
+       ).then((response)=>{ setTimeout(() => {
+         setposts(response.data.posts)
+         setloadposts(true);
+       }, 10);}).catch(e=>{errormsg(e.response.data.msg);console.log(e)});
+     }
+     asyncfun();
+   }, [])
+
     if(loading)
     {
         return(
@@ -149,6 +189,14 @@ export default function User() {
                         </div>
                     </div>
 
+                    <div className='posts'>
+                    {
+                        loadposts?
+                        posts.map((post,i)=>{
+                            return <Post key={`post${i}`} postdata={post}></Post>
+                        }):<div className="lds-ring main"><div></div><div></div><div></div><div></div></div>
+                    }
+                    </div>
 
                 </div>
             )

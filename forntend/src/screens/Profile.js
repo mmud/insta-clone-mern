@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import "./profile.css"
 import Swal from 'sweetalert2'
 import { connect } from 'react-redux';
+import Post from '../components/Post';
 
 export default function Profile() {
   const {id} = useParams();
@@ -169,6 +170,26 @@ export default function Profile() {
 
   }
 
+   //show posts
+   const [posts, setposts] = useState([])
+   const [loadposts, setloadposts] = useState(false)
+   useEffect(() => {
+     const config = {
+       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+     };
+     const asyncfun=async()=>{
+       await Axios.get( 
+       `http://localhost:3500/api/post/getuserpostes/${parseJwt(localStorage.getItem("token"))?.id}`,
+       config
+       ).then((response)=>{ setTimeout(() => {
+         setposts(response.data.posts)
+         setloadposts(true);
+       }, 10);}).catch(e=>{errormsg(e.response.data.msg);console.log(e)});
+     }
+     asyncfun();
+   }, [])
+
+
   if(loading && userdata)
   {
       return(
@@ -197,6 +218,16 @@ export default function Profile() {
                           <div className='email'>{userdata?.Email}</div>
                       </div>
                   </div>
+
+                  <div className='posts'>
+                  {
+                    loadposts?
+                      posts.map((post,i)=>{
+                        return <Post key={`post${i}`} postdata={post}></Post>
+                      }):<div className="lds-ring main"><div></div><div></div><div></div><div></div></div>
+                  }
+                  </div>
+
                   <div className='overlaye' ref={theoverlay}></div>
                   <div className='editform' ref={theform}>
                     <div className='closeform' onClick={closeeditform}>&times;</div>

@@ -12,6 +12,7 @@ import Error404 from './screens/Error404';
 import Landing from './screens/Landing';
 import User from './screens/User';
 import Home from './screens/Home';
+import PostPage from './screens/PostPage';
 
 function App() {
   const [islogedin, setislogedin] = useState(false)
@@ -61,6 +62,7 @@ function App() {
         <Route path="/" exact element={islogedin?<Home/>:<Landing/>} />
         <Route path="/Error404" exact element={<Error404/>} />
         <Route path="/user/:id" exact element={<User/>} />
+        <Route path="/post/:id" exact element={<PostPage/>} />
         <Route path="/profile" exact element={islogedin?<Profile/>:<Navigate to="/login" replace={true}/>}/>
         <Route path="/admin" exact element={islogedin&&parseJwt(localStorage.getItem("token"))?.role==="admin"?<Admin/>:<Error404/>} />
         <Route path="/register" exact element={!islogedin?<Register/>:<Navigate to="/" replace={true}/>} />

@@ -167,7 +167,7 @@ export default function Home() {
     }
     asyncfun();
   }, [])
-  console.log(loadposts);
+
   return (
     <>
     <div className='container'>

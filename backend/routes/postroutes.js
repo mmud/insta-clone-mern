@@ -43,6 +43,31 @@ app.get('/',protect,async(req,res)=>{
     }
 })
 
+app.get('/getuserpostes/:id',protect,async(req,res)=>{
+    try {
+        const posts = await Post.find({user:req.params.id})
+        .sort("-createdAt")
+        .populate("user likes","avatar UserName _id")
+        .populate({path:"comments",populate:{path:"user"}})
+        res.status(200).json({result:posts.length,posts});
+    
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.get('/post/:id',protect,async(req,res)=>{
+    try {
+        const post = await Post.findOne({_id:req.params.id})
+        .populate("user likes","avatar UserName _id")
+        .populate({path:"comments",populate:{path:"user"}})
+        res.status(200).json({result:post.length,post});
+    
+    } catch (error) {
+        console.log(error);
+    }
+})
+
 app.post('/edit',protect,async(req,res)=>{
     try {
         const { Content,images,_id,userid } = req.body;
