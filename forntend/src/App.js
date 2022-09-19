@@ -13,6 +13,7 @@ import Landing from './screens/Landing';
 import User from './screens/User';
 import Home from './screens/Home';
 import PostPage from './screens/PostPage';
+import SocketClient from './components/SocketClient';
 
 function App() {
   const [islogedin, setislogedin] = useState(false)
@@ -55,6 +56,7 @@ function App() {
   return (
     <BrowserRouter>
       <Header/>
+      {islogedin&&<SocketClient/>}
       {
         loaded?
       <Routes>

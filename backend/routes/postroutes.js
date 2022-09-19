@@ -60,7 +60,7 @@ app.get('/post/:id',protect,async(req,res)=>{
     try {
         const post = await Post.findOne({_id:req.params.id})
         .populate("user likes","avatar UserName _id")
-        .populate({path:"comments",populate:{path:"user"}})
+        .populate({path:"comments",populate:{path:"user",select:"-Password"}})
         res.status(200).json({result:post.length,post});
     
     } catch (error) {
@@ -261,6 +261,30 @@ app.post('/deletecomment',protect,async(req,res)=>{
         });
         
         await Comment.findOneAndDelete({_id});
+
+
+        res.status(200).json({msg:"done"});
+    
+        } catch (error) {
+        console.log(error);
+    }
+})
+
+app.post('/deletepost',protect,async(req,res)=>{
+    try {
+        const { _id } = req.body;
+
+        const p= await Post.findOne({_id}); 
+
+        if(req.user._id.toString()!=p.user.toString())
+        {
+            res.status(400).json({msg:"that not your post"})
+            return
+        }
+
+        await Post.findOneAndDelete({_id});
+
+        await Comment.deleteMany({_id:{$in:p.comments}});
 
 
         res.status(200).json({msg:"done"});

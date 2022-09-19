@@ -251,7 +251,7 @@ const submithandler= async(e)=>{
     //comments
     const [commentcontent, setcommentcontent] = useState("")
     const commentinput = useRef(null)
-
+    console.log(props.postdata.comments);
     const handlesendcomment=async()=>{
         const config = {
             headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
@@ -270,6 +270,15 @@ const submithandler= async(e)=>{
             {
                 setcommentcontent("");
                 commentinput.current.value="";
+                props.postdata.comments=[...props.postdata.comments,{
+                    Content:commentcontent,
+                    createdAt:undefined,
+                    likes:[],
+                    user:{
+                        UserName:"",
+                        avatar:localStorage.getItem("avatar")
+                    }
+                }]
             }
         }).catch(e=>console.log(e));
 
@@ -288,9 +297,27 @@ const submithandler= async(e)=>{
       
     }, [props.postdata.comments,nextcomment])
     
+
+    //delete post
+    const [isdelete, setisdelete] = useState(false)
+    const hnadledeletepost=async()=>{
+        const config = {
+            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+        };
+        const bodyParameters = {
+        _id:props.postdata._id,
+        };
+      
+        await Axios.post( 
+        'http://localhost:3500/api/post/deletepost',
+        bodyParameters,
+        config
+        ).then((response)=>{setisdelete(true)}).catch(e=>console.log(e));
+
+    }
   return (
     <>
-    <div className="post">
+    <div className={isdelete?"post none":'post'}>
         <div className='postheader'>
             <Link to={`/user/${props.postdata.user._id}`} className="name">
                 <img src={props.postdata.user.avatar} alt="useravatar" className='avatar'/>
@@ -350,7 +377,7 @@ const submithandler= async(e)=>{
         <i className="fa-solid fa-ellipsis" onClick={()=>dropdown.current.classList.toggle("active")}></i>
         <div className='togglemenu' ref={dropdown}>
             <div className='option' onClick={handleeditpost}><i className="fa-solid fa-pen"></i> Edit Post</div>
-            <div className='option'><i className="fa-solid fa-trash"></i> Delete Post</div>
+            <div className='option' onClick={hnadledeletepost}><i className="fa-solid fa-trash"></i> Delete Post</div>
         </div>
         </>
         :""
