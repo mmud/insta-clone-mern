@@ -87,7 +87,6 @@ export default function Header() {
               <div className='icon' onClick={()=>sidenav.current.style.width="250px"}>&#9776;</div>
               <li><NavLink to="/"><i className="fa-solid fa-house"></i></NavLink></li>
               <li><NavLink to="/messages"><i className="fa-solid fa-comment"></i></NavLink></li>
-              <li><Link to="#"><i className="fa-solid fa-bell"></i></Link></li>
               <div className='avatardiv' style={{"position":"relative"}}>
                 <img src={avatar?avatar:avatardefault} alt="avatar" className='avatar' onClick={()=>dropdown.current.classList.toggle("active")}/>
                 <div className='dropdown' ref={dropdown}>
@@ -110,7 +109,6 @@ export default function Header() {
         <div className='icon x' onClick={()=>sidenav.current.style.width="0"}>&times;</div>
           <li><NavLink to="/"><i className="fa-solid fa-house"></i> Home</NavLink></li>
           <li><NavLink to="/messages"><i className="fa-solid fa-comment"></i> Messages</NavLink></li>
-          <li><Link to="#"><i className="fa-solid fa-bell"></i> Notification</Link></li>
 		  </div>
     </>
   )

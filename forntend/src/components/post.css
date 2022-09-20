@@ -137,7 +137,7 @@
     cursor: pointer;
 }
 
-.post .commentinput{
+.commentinput{
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -148,13 +148,13 @@
     background-color: rgb(221, 221, 221) !important;
 }
 
-.post .commentinput input{
+.commentinput input{
     border: none;
     outline: none;
     flex: 1;
 }
 
-.post .commentinput .sendcomment{
+.commentinput .sendcomment{
     border: 1px solid #f48021;
     outline: none;
     background-color: white;
@@ -167,7 +167,7 @@
     color: #f48021;
 }
 
-.post .commentinput .sendcomment.active{
+.commentinput .sendcomment.active{
     background-color: #f48021;
     color: white;
     cursor: pointer;
