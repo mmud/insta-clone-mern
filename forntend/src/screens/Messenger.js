@@ -5,10 +5,12 @@ import MyMessage from '../components/MyMessage';
 import UserSearchCard from '../components/UserSearchCard';
 import YourMessage from '../components/YourMessage';
 import "./messenger.css"
+import  {socket}  from '../socketio'
 
 export default function Messenger() {
     const {id} = useParams();
     const [selecteduser, setselecteduser] = useState(null)
+    const leftside = useRef(null)
     //search
     const [search, setsearch] = useState(null)
     const [issearch, setissearch] = useState(false);
@@ -77,9 +79,11 @@ export default function Messenger() {
         config
         ).then((response)=>{
             console.log(response);
-                setcommentcontent("");
-                commentinput.current.value="";
-            
+            setcommentcontent("");
+            commentinput.current.value="";
+            setmessages([response.data,...messages]);
+            socket.emit("addMessage",response.data);
+            scrolldown();
         }).catch(e=>console.log(e));
     }
   }
@@ -120,17 +124,40 @@ export default function Messenger() {
         bodyParameters,
         config
         ).then((response)=>{
-            setmessages(response.data);
-            console.log(response)
-            
+            setmessages(response.data);      
+            scrolldown();      
         }).catch(e=>console.log(e));
     }
   }, [selecteduser])
   
+  //get realtime messages
+    socket.on("addMessageClient",msg=>{
+        if(msg.sender == selecteduser._id){
+            setTimeout(() => {
+                addmeg(msg);
+            }, 10);
+        }
+    })
+
+  const addmeg = async(msg)=>{
+    await setmessages([msg,...messages]);
+    scrolldown();
+  }
+
+  //scroll
+  const displaychat = useRef(null);
+  const scrolldown=()=>{
+    if(displaychat.current)
+    {
+        setTimeout(() => {
+            displaychat.current.scrollIntoView({behavior:'smooth',block:'end'});
+        }, 50);
+    }
+  }
   return (
     <div className='container'>
         <div className='messenger'>
-            <div className='leftside'>
+            <div className='leftside' ref={leftside}>
                 <div className='mheader'>
                     <div className="search-box">
                         <input className="search-input" onFocus={()=>setissearch(true)} onBlur={()=>{setTimeout(() => {setissearch(false)}, 100); }} onChange={(e)=>setsearch(e.target.value)} type="text" placeholder="Search something.."/>
@@ -140,7 +167,7 @@ export default function Messenger() {
                 <div className='musers'>
                     {issearch?users?.map((user,i)=><div className={selecteduser==user?"active":""}  key={`usersearchard${i}`} onClick={()=>{setselecteduser(user);console.log(user)}}><UserSearchCard messages={true} avatar={user.avatar} UserName={user.UserName} id={user._id} /></div>)
                     :
-                        conv.map((user,i)=><div className={selecteduser==user?"active":""}  key={`usersearchard${i}`} onClick={()=>{setselecteduser(user);console.log(user)}}><UserSearchCard messages={true} avatar={user.avatar} UserName={user.UserName} id={user._id} /></div>)
+                        conv.map((user,i)=><div className={selecteduser==user?"active":""}  key={`usersearchard${i}`} onClick={()=>{setselecteduser(user)}}><UserSearchCard messages={true} avatar={user.avatar} UserName={user.UserName} id={user._id} /></div>)
                     }
                 </div>
             </div>
@@ -148,13 +175,15 @@ export default function Messenger() {
                 {id == undefined?<div className='main'><i className="fa-solid fa-comment"></i></div>:
                 <>
                     <div className='mheader'>
+                    <div className='icon' onClick={()=>leftside.current.classList.toggle("active")} style={{"float":"right"}}>&#9776;</div>
+
                         <div className='userstate'>
                             {selecteduser?.avatar?<img src={selecteduser.avatar} alt="avatar" style={{"borderRadius":"50%"}}/>:""}
                             <span>{selecteduser?.UserName}</span>
                         </div>
                     </div>
                     <div className='chat'>
-                        <div className='chatdisplay'>
+                        <div className='chatdisplay' ref={displaychat}>
                             {
                                 messages.map((m,i)=>
                                     m.sender ==parseJwt(localStorage.getItem("token")).id?

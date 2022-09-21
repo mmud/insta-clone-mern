@@ -102,3 +102,30 @@
 .musers .active{
     background-color: #f0f2f5;
 }
+
+.mheader .search-box{
+    width: 100%;
+}
+
+.leftside.active{
+    width: 31% ;
+    left: 0 !important;
+}
+
+@media screen and (max-width: 690px){
+    .leftside{
+        position: absolute;
+        z-index: 1;
+        background-color: white;
+        left: -300px;
+        transition: 0.3s;
+        -webkit-transition: 0.3s;
+        -moz-transition: 0.3s;
+        -ms-transition: 0.3s;
+        -o-transition: 0.3s;
+        width: 220px !important;
+}
+    .rightside{
+        width: 100% !important;
+    }
+}

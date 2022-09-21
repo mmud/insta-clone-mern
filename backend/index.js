@@ -21,16 +21,23 @@ const io = require("socket.io")(http,{
     }
   });
 
-// const users=[];
-// io.on('connection', socket => {
-//     //connrect and disconnect
-//     socket.on('joinUser',id=>{
-//         users.push({id,socketId:socket.id});
-//     })
-//     socket.on("disconnect",id=>{
-//         users = users.filter(user=>user.socketId !== socket.id);
-//     })
-// });
+let users=[];
+io.on('connection', socket => {
+    //connrect and disconnect
+    socket.on('joinUser',id=>{
+        users.push({id,socketId:socket.id});
+    })
+
+    socket.on("addMessage",msg=>{
+        const user = users.find(user=>user.id === msg.recipient);
+        user && socket.to(`${user.socketId}`).emit("addMessageClient",msg);
+    })
+
+    socket.on("disconnect",id=>{
+        if(users.length>0)
+            users = users.filter(user=>user.socketId != socket.id);
+    })
+});
   
 
 //mongodb

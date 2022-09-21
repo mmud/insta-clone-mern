@@ -48,7 +48,7 @@ export default function Login() {
       
       Toast.fire({
         icon: 'error',
-        title: e.response.data.msg
+        title: e.response.data?.msg
       })
     });
   }

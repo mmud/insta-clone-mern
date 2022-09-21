@@ -108,7 +108,7 @@ menu.responsive{
 	    height: 40px;
 	}
 
-    .search-box{
+    header .search-box{
         width: 80% !important;
         position: absolute !important;
         top: 80px !important;

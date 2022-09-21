@@ -63,8 +63,8 @@ function App() {
       <Routes>
         <Route path="*" exact element={<Error404/>} />
         <Route path="/" exact element={islogedin?<Home/>:<Landing/>} />
-        <Route path="/messages" exact element={islogedin?<Messenger/>:<Landing/>} />
-        <Route path="/messages/:id" exact element={islogedin?<Messenger/>:<Landing/>} />
+        <Route path="/messages" exact element={islogedin?<Messenger/>:<Navigate to="/login" replace={true}/>} />
+        <Route path="/messages/:id" exact element={islogedin?<Messenger/>:<Navigate to="/login" replace={true}/>} />
         <Route path="/Error404" exact element={<Error404/>} />
         <Route path="/user/:id" exact element={<User/>} />
         <Route path="/post/:id" exact element={<PostPage/>} />
