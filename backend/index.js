@@ -50,6 +50,7 @@ connectDB();
 app.use("/api/auth", require("./routes/authroutes"));
 app.use("/api/user", require("./routes/userroutes"));
 app.use("/api/post", require("./routes/postroutes"));
+app.use("/api/message", require("./routes/messageroutes"));
 
 
 

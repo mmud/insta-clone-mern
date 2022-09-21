@@ -46,45 +46,102 @@ export default function Messenger() {
 
   }, [])
   
+  function parseJwt (token) {
+    if(token==="null" ||token===null ||token===undefined)
+      return null
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
+    };
 
   //send message
   const [commentcontent, setcommentcontent] = useState("")
   const commentinput = useRef(null)
   const handlesendcomment=async()=>{
-      const config = {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
-      };
-      const bodyParameters = {
-      Content:commentcontent
-      };
-      console.log(bodyParameters);
-      await Axios.post( 
-      'http://localhost:3500/api/post/comment',
-      bodyParameters,
-      config
-      ).then((response)=>{
-          if(response.data.msg == "done")
-          {
-              setcommentcontent("");
-              commentinput.current.value="";
-          }
-      }).catch(e=>console.log(e));
-
+    if(selecteduser){
+        const config = {
+            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+        };
+        const bodyParameters = {
+        Content:commentcontent,
+        recipient:selecteduser?._id
+        };
+        console.log(bodyParameters);
+        await Axios.post( 
+        'http://localhost:3500/api/message',
+        bodyParameters,
+        config
+        ).then((response)=>{
+            console.log(response);
+                setcommentcontent("");
+                commentinput.current.value="";
+            
+        }).catch(e=>console.log(e));
+    }
   }
-  
+    const [conv, setconv] = useState([])
+  //get conversations
+  useEffect(() => {
+        const config = {
+            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+        };
+        Axios.get( 
+        'http://localhost:3500/api/message/conversations',
+        config
+        ).then((response)=>{
+            let nrearr=[];
+            response.data.forEach(item => {
+                item.recipients.forEach(user=>{
+                    if(user._id !== parseJwt(localStorage.getItem("token")).id)
+                        nrearr.push(user);
+                })
+            });
+            setconv(nrearr);
+        }).catch(e=>console.log(e));
+  }, [])
 
+  //get messages
+  const [messages, setmessages] = useState([])
+  useEffect(() => {
+    if(selecteduser)
+    {
+        const config = {
+            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+        };
+        const bodyParameters = {
+        id:selecteduser?._id
+        };
+        Axios.post( 
+        'http://localhost:3500/api/message/messages',
+        bodyParameters,
+        config
+        ).then((response)=>{
+            setmessages(response.data);
+            console.log(response)
+            
+        }).catch(e=>console.log(e));
+    }
+  }, [selecteduser])
+  
   return (
     <div className='container'>
         <div className='messenger'>
             <div className='leftside'>
                 <div className='mheader'>
                     <div className="search-box">
-                        <input className="search-input" onFocus={()=>setissearch(true)} onChange={(e)=>setsearch(e.target.value)} type="text" placeholder="Search something.."/>
+                        <input className="search-input" onFocus={()=>setissearch(true)} onBlur={()=>{setTimeout(() => {setissearch(false)}, 100); }} onChange={(e)=>setsearch(e.target.value)} type="text" placeholder="Search something.."/>
                         <button className="search-btn"><i className="fas fa-search"></i></button>
                     </div>
                 </div>
                 <div className='musers'>
-                    {users?.map((user,i)=><div className={selecteduser==user?"active":""}  key={`usersearchard${i}`} onClick={()=>{setselecteduser(user);console.log(user)}}><UserSearchCard messages={true} avatar={user.avatar} UserName={user.UserName} id={user._id} /></div>)}
+                    {issearch?users?.map((user,i)=><div className={selecteduser==user?"active":""}  key={`usersearchard${i}`} onClick={()=>{setselecteduser(user);console.log(user)}}><UserSearchCard messages={true} avatar={user.avatar} UserName={user.UserName} id={user._id} /></div>)
+                    :
+                        conv.map((user,i)=><div className={selecteduser==user?"active":""}  key={`usersearchard${i}`} onClick={()=>{setselecteduser(user);console.log(user)}}><UserSearchCard messages={true} avatar={user.avatar} UserName={user.UserName} id={user._id} /></div>)
+                    }
                 </div>
             </div>
             <div className='rightside'>
@@ -98,10 +155,14 @@ export default function Messenger() {
                     </div>
                     <div className='chat'>
                         <div className='chatdisplay'>
-                            <MyMessage Content="test"/>
-                            <YourMessage Content="test"/>
-                            <YourMessage Content="test"/>
-                            <YourMessage Content="test"/>
+                            {
+                                messages.map((m,i)=>
+                                    m.sender ==parseJwt(localStorage.getItem("token")).id?
+                                    <MyMessage Content={m.Content}/>
+                                    :
+                                    <YourMessage Content={m.Content}/>
+                                )
+                            }
                         </div>
                     </div>
 
