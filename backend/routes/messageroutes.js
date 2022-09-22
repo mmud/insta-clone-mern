@@ -83,4 +83,31 @@ app.post('/messages',protect,async(req,res)=>{
     }
 })
 
+app.post('/deletemessage',protect,async(req,res)=>{
+    try{
+        const {id} = req.body;
+
+        if(!id)
+        {
+            res.status(400).json({msg:"need data"});
+            return;
+        }
+        const condata = await Message.findOne({_id:id})
+
+        if(!condata || condata?.sender.toString() != req.user._id)
+        {
+            res.status(400).json({msg:"error"});
+            return;
+        }
+        await Message.findOneAndDelete({_id:id});
+
+       res.status(200).json(condata);
+    }
+    catch(error)
+    {
+        console.log(error);
+        //res.status(500).json({msg:error.message});
+    }
+})
+
 module.exports = app;

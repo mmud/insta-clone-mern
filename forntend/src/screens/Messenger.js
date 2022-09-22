@@ -5,9 +5,30 @@ import MyMessage from '../components/MyMessage';
 import UserSearchCard from '../components/UserSearchCard';
 import YourMessage from '../components/YourMessage';
 import "./messenger.css"
-import  {socket}  from '../socketio'
+import socketIO  from "socket.io-client"
 
 export default function Messenger() {
+
+    const socket = socketIO.connect('http://localhost:3500');
+    function parseJwt (token) {
+        if(token==="null" ||token===null ||token===undefined)
+        return null
+        var base64Url = token.split('.')[1];
+        var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+    
+        return JSON.parse(jsonPayload);
+    };
+    
+
+    useEffect(() => {
+        socket.emit('joinUser',parseJwt(localStorage.getItem("token")).id);
+    }, [])
+    
+
+
     const {id} = useParams();
     const [selecteduser, setselecteduser] = useState(null)
     const leftside = useRef(null)
@@ -88,6 +109,7 @@ export default function Messenger() {
     }
   }
     const [conv, setconv] = useState([])
+    const [convloading, setconvloading] = useState(true)
   //get conversations
   useEffect(() => {
         const config = {
@@ -105,14 +127,17 @@ export default function Messenger() {
                 })
             });
             setconv(nrearr);
+            setconvloading(false);
         }).catch(e=>console.log(e));
   }, [])
 
   //get messages
   const [messages, setmessages] = useState([])
+  const [messagesloading, setmessagesloading] = useState(false)
   useEffect(() => {
     if(selecteduser)
     {
+        setmessagesloading(true)
         const config = {
             headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
         };
@@ -125,24 +150,33 @@ export default function Messenger() {
         config
         ).then((response)=>{
             setmessages(response.data);      
-            scrolldown();      
+            scrolldown();     
+            setmessagesloading(false); 
         }).catch(e=>console.log(e));
     }
   }, [selecteduser])
   
-  //get realtime messages
-    socket.on("addMessageClient",msg=>{
-        if(msg.sender == selecteduser._id){
-            setTimeout(() => {
-                addmeg(msg);
-            }, 10);
-        }
-    })
+  //realtime messages
+  const [getm, setgetm] = useState(null)
+  const [getd, setgetd] = useState(null)
 
-  const addmeg = async(msg)=>{
-    await setmessages([msg,...messages]);
-    scrolldown();
-  }
+    socket.on("addMessageClient",msg=>setgetm(msg))
+
+   
+    //delete realtime messages
+   
+    
+    socket.on("deleteMessageClient",msg=>setgetd(msg))
+
+
+    // const sendmessage= async(msg)=>{
+    //     setTimeout(async() => {
+    //         await setmessages([msg,...messages]);
+    //     }, 100);
+    //     scrolldown()
+    // }
+    
+   
 
   //scroll
   const displaychat = useRef(null);
@@ -154,6 +188,51 @@ export default function Messenger() {
         }, 50);
     }
   }
+
+  //delete message
+  const deletemessage=async(id)=>{
+    const config = {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    };
+    const bodyParameters = {
+    "id":id
+    };
+    Axios.post( 
+    'http://localhost:3500/api/message/deletemessage',
+    bodyParameters,
+    config
+    ).then((response)=>{
+        let mes = messages;
+        mes = mes.filter(m=>m._id !=id)
+        setmessages(mes);      
+        scrolldown();      
+        socket.emit("deleteMessage",response.data);
+    }).catch(e=>console.log(e));
+  }
+
+   
+
+    
+    useEffect(() => {
+        if(getm !=null && getm.sender == selecteduser._id){
+            setmessages([getm,...messages]);
+            setgetm(null)
+        }
+
+        console.log(getd)
+        if(getd !=null  && getd.sender == selecteduser._id){
+            let mes = messages
+            mes = mes.filter(me=>me._id !=getd._id);
+            setmessages(mes); 
+            setgetd(null)
+        }
+     
+    }, [socket])
+    
+
+   
+
+
   return (
     <div className='container'>
         <div className='messenger'>
@@ -167,12 +246,17 @@ export default function Messenger() {
                 <div className='musers'>
                     {issearch?users?.map((user,i)=><div className={selecteduser==user?"active":""}  key={`usersearchard${i}`} onClick={()=>{setselecteduser(user);console.log(user)}}><UserSearchCard messages={true} avatar={user.avatar} UserName={user.UserName} id={user._id} /></div>)
                     :
-                        conv.map((user,i)=><div className={selecteduser==user?"active":""}  key={`usersearchard${i}`} onClick={()=>{setselecteduser(user)}}><UserSearchCard messages={true} avatar={user.avatar} UserName={user.UserName} id={user._id} /></div>)
+                        convloading?"loading...":conv.map((user,i)=><div className={selecteduser==user?"active":""}  key={`usersearchard${i}`} onClick={()=>{setselecteduser(user)}}><UserSearchCard messages={true} avatar={user.avatar} UserName={user.UserName} id={user._id} /></div>)
                     }
                 </div>
             </div>
             <div className='rightside'>
-                {id == undefined?<div className='main'><i className="fa-solid fa-comment"></i></div>:
+                {
+                    id == undefined? <div className='icon' onClick={()=>leftside.current.classList.toggle("active")} style={{"float":"right","position":"absolute","top":"5px","right":"-10px"}}>&#9776;</div>:""
+                }
+                {id == undefined?<div className='main' >
+                    <i className="fa-solid fa-comment"></i>
+                    </div>:
                 <>
                     <div className='mheader'>
                     <div className='icon' onClick={()=>leftside.current.classList.toggle("active")} style={{"float":"right"}}>&#9776;</div>
@@ -184,14 +268,16 @@ export default function Messenger() {
                     </div>
                     <div className='chat'>
                         <div className='chatdisplay' ref={displaychat}>
-                            {
-                                messages.map((m,i)=>
+                            
+                               { messagesloading?"loading...": messages.map((m,i)=>
                                     m.sender ==parseJwt(localStorage.getItem("token")).id?
-                                    <MyMessage Content={m.Content}/>
+                                    <MyMessage Content={m.Content} deletefun={deletemessage} _id={m._id}/>
                                     :
                                     <YourMessage Content={m.Content}/>
                                 )
-                            }
+                                }
+
+                            
                         </div>
                     </div>
 

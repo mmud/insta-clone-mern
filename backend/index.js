@@ -26,17 +26,27 @@ io.on('connection', socket => {
     //connrect and disconnect
     socket.on('joinUser',id=>{
         users.push({id,socketId:socket.id});
+        console.log(users)
     })
 
     socket.on("addMessage",msg=>{
+        console.log(msg)
         const user = users.find(user=>user.id === msg.recipient);
         user && socket.to(`${user.socketId}`).emit("addMessageClient",msg);
+    })
+
+    socket.on("deleteMessage",msg=>{
+        console.log(msg)
+        const user = users.find(user=>user.id === msg.recipient);
+        user && socket.to(`${user.socketId}`).emit("deleteMessageClient",msg);
     })
 
     socket.on("disconnect",id=>{
         if(users.length>0)
             users = users.filter(user=>user.socketId != socket.id);
-    })
+        console.log(users)
+    
+        })
 });
   
 
