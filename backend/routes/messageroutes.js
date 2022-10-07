@@ -59,6 +59,7 @@ app.get('/conversations',protect,async(req,res)=>{
 
 app.post('/messages',protect,async(req,res)=>{
     const {id} = req.body;
+    const {num} = req.body;
     if(!id)
     {
         res.status(400).json({msg:"need data"});
@@ -71,7 +72,7 @@ app.post('/messages',protect,async(req,res)=>{
                 {sender:req.user._id,recipient:id},
                 {sender:id,recipient:req.user._id}
             ]
-        })
+        }).skip((num-1)*20).limit(20)
         .sort("-createdAt")
 
        res.status(200).json(condata);

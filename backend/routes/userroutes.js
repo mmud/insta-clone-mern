@@ -18,7 +18,7 @@ app.get('/getuser/:id',async(req,res)=>{
     try {
         if(mongoose.Types.ObjectId.isValid(req.params.id)){
 
-            const user = await User.findOne({_id:req.params.id}).select("-Password -Role");
+            const user = await User.findOne({_id:req.params.id}).limit(10).select("-Password -Role");
             if(!user)
                 res.status(404).json({msg:"Not Found"});
 

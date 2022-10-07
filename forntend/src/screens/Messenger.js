@@ -133,16 +133,19 @@ export default function Messenger() {
 
   //get messages
   const [messages, setmessages] = useState([])
+  const [num, setnum] = useState(1);
   const [messagesloading, setmessagesloading] = useState(false)
   useEffect(() => {
     if(selecteduser)
     {
+        setnum(1);
         setmessagesloading(true)
         const config = {
             headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
         };
         const bodyParameters = {
-        id:selecteduser?._id
+        id:selecteduser?._id,
+        num:1
         };
         Axios.post( 
         'http://localhost:3500/api/message/messages',
@@ -230,7 +233,50 @@ export default function Messenger() {
     }, [socket])
     
 
-   
+    //scroll messages
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const chats = useRef(null)
+  const handleScroll = () => {
+      const position = chats.current.scrollTop;
+      setScrollPosition(position);
+      
+  };
+
+  useEffect(() => {
+      window.addEventListener('scroll', handleScroll, { passive: true });
+
+      return () => {
+          window.removeEventListener('scroll', handleScroll);
+      };
+  }, []);
+
+  const [anothergetpost, setanothergetpost] = useState(false)
+  const [nomoredata, setnomoredata] = useState(false)
+  const loadmore =() => {
+    if( !anothergetpost &&!nomoredata &&selecteduser)
+    {
+        console.log(true);
+      setanothergetpost(true);
+      const nextnum = num+1;
+      setnum(num+1)
+      const config = {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+      };
+      const bodyParameters = {
+      id:selecteduser?._id,
+      num:nextnum
+      };
+      Axios.post( 
+      'http://localhost:3500/api/message/messages',
+      bodyParameters,
+      config
+      ).then((response)=>{
+          setmessages([...messages,...response.data]);      
+          setanothergetpost(false);
+
+      }).catch(e=>console.log(e));
+    }
+  }
 
 
   return (
@@ -266,7 +312,7 @@ export default function Messenger() {
                             <span>{selecteduser?.UserName}</span>
                         </div>
                     </div>
-                    <div className='chat'>
+                    <div className='chat' ref={chats}>
                         <div className='chatdisplay' ref={displaychat}>
                             
                                { messagesloading?"loading...": messages.map((m,i)=>
@@ -277,7 +323,7 @@ export default function Messenger() {
                                 )
                                 }
 
-                            
+                                {selecteduser?<button onClick={loadmore} className="loadmorebtn">loadmore</button>:""}
                         </div>
                     </div>
 

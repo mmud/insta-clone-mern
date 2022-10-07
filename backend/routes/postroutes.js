@@ -32,8 +32,10 @@ app.post('/',protect,async(req,res)=>{
 
 app.get('/',protect,async(req,res)=>{
     try {
+        let num = req.query.num;
+
         const posts = await Post.find({user:[...req.user.following, req.user._id]})
-        .sort("-createdAt")
+        .sort("-createdAt").skip((num-1)*5).limit(5)
         .populate("user likes","avatar UserName _id")
         .populate({path:"comments",populate:{path:"user"}})
         res.status(200).json({result:posts.length,posts});

@@ -120,6 +120,14 @@
 .imgcont span:hover{
     opacity: 1;
 }
+.loadmorebtn{
+    background-color: #f1f1f100;
+    border: none;
+    outline: none;
+    color: #f48021;
+    text-decoration: underline;
+    cursor: pointer;
+}
 
 @media (max-width:600px) {
     .status{

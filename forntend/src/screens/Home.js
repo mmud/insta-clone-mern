@@ -151,6 +151,7 @@ export default function Home() {
 
   //show posts
   const [posts, setposts] = useState([])
+  const [num, setnum] = useState(1);
   const [loadposts, setloadposts] = useState(false)
   useEffect(() => {
     const config = {
@@ -158,7 +159,7 @@ export default function Home() {
     };
     const asyncfun=async()=>{
       await Axios.get( 
-      'http://localhost:3500/api/post',
+      `http://localhost:3500/api/post?num=${num}`,
       config
       ).then((response)=>{ setTimeout(() => {
         setposts(response.data.posts)
@@ -167,6 +168,59 @@ export default function Home() {
     }
     asyncfun();
   }, [])
+
+  //scroll postes
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const [maxscrollPosition, setmaxscrollPosition] = useState(0);
+  const handleScroll = () => {
+      const position = window.pageYOffset;
+      setScrollPosition(position);
+      const maxposition = -document.documentElement.clientHeight +document.documentElement.offsetHeight;      ;
+      setmaxscrollPosition(maxposition);
+  };
+
+  useEffect(() => {
+      window.addEventListener('scroll', handleScroll, { passive: true });
+
+      return () => {
+          window.removeEventListener('scroll', handleScroll);
+      };
+  }, []);
+
+  const [anothergetpost, setanothergetpost] = useState(false)
+  const [nomoredata, setnomoredata] = useState(false)
+  const scrollloading = useRef(null)
+  const nomoredatatext = useRef(null)
+  useEffect(() => {
+    if((scrollPosition/maxscrollPosition)*100>=70 && !anothergetpost &&!nomoredata)
+    {
+      setanothergetpost(true);
+      scrollloading.current.style.display="block";
+      const nextnum = num+1;
+      setnum(num+1)
+        const config = {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+        };
+        const asyncfun=async()=>{
+          await Axios.get( 
+          `http://localhost:3500/api/post?num=${nextnum}`,
+          config
+          ).then((response)=>{ setTimeout(() => {
+            console.log(response);
+            setposts([...posts,...response.data.posts])
+            if(!response.data.posts?.length > 0)
+            {
+              setnomoredata(true)
+              nomoredatatext.current.style.display="block";
+            }
+            scrollloading.current.style.display="none";
+            setanothergetpost(false);
+          }, 10);}).catch(e=>{errormsg(e.response.data.msg);console.log(e)});
+        }
+        asyncfun();
+    }
+  }, [scrollPosition])
+  
 
   return (
     <>
@@ -185,6 +239,8 @@ export default function Home() {
             }):<div className="lds-ring main"><div></div><div></div><div></div><div></div></div>
         }
         </div>
+        <div ref={scrollloading} style={{"display":"none","textAlign":"center","fontWeight":"bolder"}}>Loading...</div>
+        <div ref={nomoredatatext} style={{"display":"none","textAlign":"center","fontWeight":"bolder"}}>No More Posts</div>
     </div>
     <div className='overlaye' ref={theoverlay}></div>
     <div className='editform home' ref={theform}>

@@ -251,7 +251,6 @@ const submithandler= async(e)=>{
     //comments
     const [commentcontent, setcommentcontent] = useState("")
     const commentinput = useRef(null)
-    console.log(props.postdata.comments);
     const handlesendcomment=async()=>{
         const config = {
             headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
@@ -315,6 +314,8 @@ const submithandler= async(e)=>{
         ).then((response)=>{setisdelete(true)}).catch(e=>console.log(e));
 
     }
+
+    
   return (
     <>
     <div className={isdelete?"post none":'post'}>
