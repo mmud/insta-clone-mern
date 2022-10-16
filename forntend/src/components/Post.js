@@ -181,7 +181,8 @@ const submithandler= async(e)=>{
   };
 
   await Axios.post( 
-  'http://localhost:3500/api/post/edit',
+    'http://localhost:3500/api/post/edit',
+    //'/api/post/edit',
   bodyParameters,
   config
   ).then((response)=>{
@@ -222,6 +223,7 @@ const submithandler= async(e)=>{
       
         await Axios.post( 
         'http://localhost:3500/api/post/unlike',
+        //'/api/post/unlike',
         bodyParameters,
         config
         ).then((response)=>{}).catch(e=>console.log(e));
@@ -240,6 +242,7 @@ const submithandler= async(e)=>{
       
         await Axios.post( 
         'http://localhost:3500/api/post/like',
+        //'/api/post/like',
         bodyParameters,
         config
         ).then((response)=>{}).catch(e=>console.log(e));
@@ -262,23 +265,15 @@ const submithandler= async(e)=>{
         console.log(bodyParameters);
         await Axios.post( 
         'http://localhost:3500/api/post/comment',
+        //'/api/post/comment',
         bodyParameters,
         config
         ).then((response)=>{
-            if(response.data.msg == "done")
-            {
+            
                 setcommentcontent("");
                 commentinput.current.value="";
-                props.postdata.comments=[...props.postdata.comments,{
-                    Content:commentcontent,
-                    createdAt:undefined,
-                    likes:[],
-                    user:{
-                        UserName:"",
-                        avatar:localStorage.getItem("avatar")
-                    }
-                }]
-            }
+                props.postdata.comments=[...props.postdata.comments,response.data.comment]
+            
         }).catch(e=>console.log(e));
 
     }
@@ -309,6 +304,7 @@ const submithandler= async(e)=>{
       
         await Axios.post( 
         'http://localhost:3500/api/post/deletepost',
+        //'/api/post/deletepost',
         bodyParameters,
         config
         ).then((response)=>{setisdelete(true)}).catch(e=>console.log(e));

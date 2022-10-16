@@ -15,13 +15,16 @@ import Home from './screens/Home';
 import PostPage from './screens/PostPage';
 import SocketClient from './components/SocketClient';
 import Messenger from './screens/Messenger';
+import Reeluploadvieos from './screens/Reeluploadvieos';
 
 function App() {
   const [islogedin, setislogedin] = useState(false)
   const [loaded, setloaded] = useState(false)
   useEffect(() => {
     Axios.get( 
+      //'/api/auth/isloggedin',
       'http://localhost:3500/api/auth/isloggedin',
+      
       {headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }}
     ).then(response=>{
       if(response.data === "not authorized")
@@ -65,6 +68,7 @@ function App() {
         <Route path="/" exact element={islogedin?<Home/>:<Landing/>} />
         <Route path="/messages" exact element={islogedin?<Messenger/>:<Navigate to="/login" replace={true}/>} />
         <Route path="/messages/:id" exact element={islogedin?<Messenger/>:<Navigate to="/login" replace={true}/>} />
+        <Route path="/uploadreel" exact element={islogedin?<Reeluploadvieos/>:<Navigate to="/login" replace={true}/>} />
         <Route path="/Error404" exact element={<Error404/>} />
         <Route path="/user/:id" exact element={<User/>} />
         <Route path="/post/:id" exact element={<PostPage/>} />

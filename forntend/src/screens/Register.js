@@ -29,6 +29,7 @@ export default function Register() {
     
     Axios.post( 
       'http://localhost:3500/api/auth/register',
+      //'/api/auth/register',
       inputs
     ).then((response)=>{
       console.log(response)

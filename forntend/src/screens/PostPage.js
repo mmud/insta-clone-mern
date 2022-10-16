@@ -18,7 +18,8 @@ export default function PostPage() {
         
 
         Axios.get( 
-        `http://localhost:3500/api/post/post/${id}`,
+            `http://localhost:3500/api/post/post/${id}`,
+            //`/api/post/post/${id}`,
         config,
         ).then((Response)=>{setpostdata(Response.data.post)}).catch((e)=>{
                 setnotfound(true);

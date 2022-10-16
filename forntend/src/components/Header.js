@@ -39,6 +39,7 @@ export default function Header() {
         const ser = async()=>{
         await Axios.get( 
           `http://localhost:3500/api/user/searchbyname?UserName=${search}`,
+          //`/api/user/searchbyname?UserName=${search}`,
         ).then((Response)=>setusers(Response.data)).catch(console.log);
       }
       ser();
@@ -58,6 +59,7 @@ export default function Header() {
 
       Axios.get( 
       `http://localhost:3500/api/auth/avatar`,
+      //`/api/auth/avatar`,
       config,
       ).then((Response)=>{
         setavatar(Response.data.avatar);

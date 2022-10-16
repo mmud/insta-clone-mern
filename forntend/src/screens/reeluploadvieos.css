@@ -1,0 +1,112 @@
+.uploadarea{
+    display: flex;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: center;
+    flex-direction: column;
+    cursor: pointer;
+    padding-left: 35px;
+    padding-right: 35px;
+    width: 260px;
+    height: 458px;
+    border: 2px dashed rgba(22, 24, 35, 0.2);
+    box-sizing: border-box;
+    border-radius: 8px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    -ms-border-radius: 8px;
+    -o-border-radius: 8px;
+    transition: 0.3s;
+    -webkit-transition: 0.3s;
+    -moz-transition: 0.3s;
+    -ms-transition: 0.3s;
+    -o-transition: 0.3s;
+    margin-right: 100px;
+
+}
+
+.uploadarea:hover{
+    border: 2px dashed #f48021;
+
+}
+
+.fa-cloud-arrow-up{
+    font-size: 30px;
+    color: #f48021;
+}
+
+.uploadarea h2{
+    font-size: 16px;
+    text-align: center;
+    margin-top: 24px;
+}
+
+.uploadarea p{
+    margin-bottom: 6px;
+    text-align: center;
+    color: rgba(22,24,35,0.5);
+}
+
+.reelupload .form{
+    flex: 2;
+}
+
+.reelupload .form input{
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 18px;
+    cursor: text;
+    width: 98%;
+    position: relative;
+    padding: 0px 80px 0px 16px;
+    min-height: 46px;
+    position: relative;
+    border: 1px solid rgba(22, 24, 35, 0.12);
+    border-radius: 4px;
+    outline: none;
+}
+
+.reelupload .form label{
+    font-weight: 600;
+    margin: 10px 0;
+    display: block;
+}
+
+.reelupload .form button{
+    font-family: "Roboto", sans-serif;
+    text-transform: uppercase;
+    outline: 0;
+    background: #f48021;
+    width: 200px;
+    border: 0;
+    padding: 15px;
+    color: #FFFFFF;
+    font-size: 14px;
+    transition: all 0.3 ease;
+    cursor: pointer;
+    margin: 10px 0;
+
+}
+
+.reelupload {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 50px;
+}
+
+
+@media (max-width:768px) {
+    .reelupload .form{
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .reelupload{
+        flex-direction: column;
+    }
+
+    .uploadarea{
+        margin: auto;
+    }
+}

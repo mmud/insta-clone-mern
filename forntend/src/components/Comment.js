@@ -75,6 +75,7 @@ export default function Comment({post,comment}) {
       
         await Axios.post( 
         'http://localhost:3500/api/post/editcomment',
+        //'/api/post/editcomment',
         bodyParameters,
         config
         ).then((response)=>{
@@ -104,6 +105,7 @@ export default function Comment({post,comment}) {
       
         await Axios.post( 
         'http://localhost:3500/api/post/likecomment',
+        //'/api/post/likecomment',
         bodyParameters,
         config
         ).then((response)=>{}).catch(e=>console.log(e));
@@ -121,6 +123,7 @@ export default function Comment({post,comment}) {
       
         await Axios.post( 
         'http://localhost:3500/api/post/unlikecomment',
+        //'/api/post/unlikecomment',
         bodyParameters,
         config
         ).then((response)=>{}).catch(e=>console.log(e));
@@ -141,6 +144,7 @@ export default function Comment({post,comment}) {
       
         await Axios.post( 
         'http://localhost:3500/api/post/deletecomment',
+        //'/api/post/deletecomment',
         bodyParameters,
         config
         ).then((response)=>{setisdelete(true)}).catch(e=>console.log(e));

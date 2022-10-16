@@ -128,23 +128,21 @@ export default function Home() {
     };
 
     await Axios.post( 
-    'http://localhost:3500/api/post',
+      'http://localhost:3500/api/post',
+      //'/api/post',
     bodyParameters,
     config
     ).then((response)=>{
       console.log(response);
-      if(response.data.msg ==="done")
-      {
-        disinput.current.value="";
-        setimages([]);
-        setInputs({
-          Content:""
-        })
-        closeeditform();
-        e.target.disabled=false;
-        spinner.current.style.display="none";
-    
-      }
+      disinput.current.value="";
+      setimages([]);
+      setInputs({
+        Content:""
+      })
+      closeeditform();
+      e.target.disabled=false;
+      spinner.current.style.display="none";
+      setposts([response.data.post,...posts])
     }).catch(e=>{errormsg(e.response.data.msg);console.log(e)});
   }
   
@@ -160,6 +158,7 @@ export default function Home() {
     const asyncfun=async()=>{
       await Axios.get( 
       `http://localhost:3500/api/post?num=${num}`,
+      //`/api/post?num=${num}`,
       config
       ).then((response)=>{ setTimeout(() => {
         setposts(response.data.posts)
@@ -204,6 +203,7 @@ export default function Home() {
         const asyncfun=async()=>{
           await Axios.get( 
           `http://localhost:3500/api/post?num=${nextnum}`,
+          //`/api/post?num=${nextnum}`,
           config
           ).then((response)=>{ setTimeout(() => {
             console.log(response);

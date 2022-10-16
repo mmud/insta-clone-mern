@@ -27,6 +27,7 @@ export default function Login() {
     
     Axios.post( 
       'http://localhost:3500/api/auth/login',
+      //'/api/auth/login',
       inputs
     ).then((response)=>{
       console.log(response)

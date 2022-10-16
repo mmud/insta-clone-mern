@@ -69,6 +69,10 @@ app.use("/api/user", require("./routes/userroutes"));
 app.use("/api/post", require("./routes/postroutes"));
 app.use("/api/message", require("./routes/messageroutes"));
 
-
+//frontend
+app.use(express.static('build'))
+app.get('*',(req,res)=>{
+    res.sendFile(`${__dirname}/build/index.html`);
+})
 
 http.listen(process.env.PORT,()=>{console.log('server is running');})

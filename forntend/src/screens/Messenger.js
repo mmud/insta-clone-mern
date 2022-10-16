@@ -9,7 +9,7 @@ import socketIO  from "socket.io-client"
 
 export default function Messenger() {
 
-    const socket = socketIO.connect('http://localhost:3500');
+    const socket = socketIO.connect('');
     function parseJwt (token) {
         if(token==="null" ||token===null ||token===undefined)
         return null
@@ -42,6 +42,7 @@ export default function Messenger() {
         const ser = async()=>{
         await Axios.get( 
           `http://localhost:3500/api/user/searchbyname?UserName=${search}`,
+          //`/api/user/searchbyname?UserName=${search}`,
         ).then((Response)=>setusers(Response.data)).catch(console.log);
       }
       ser();
@@ -61,6 +62,7 @@ export default function Messenger() {
 
       Axios.get( 
       `http://localhost:3500/api/auth/avatar`,
+      //`/api/auth/avatar`,
       config,
       ).then((Response)=>{
         setavatar(Response.data.avatar);
@@ -96,6 +98,7 @@ export default function Messenger() {
         console.log(bodyParameters);
         await Axios.post( 
         'http://localhost:3500/api/message',
+        //'/api/message',
         bodyParameters,
         config
         ).then((response)=>{
@@ -117,6 +120,7 @@ export default function Messenger() {
         };
         Axios.get( 
         'http://localhost:3500/api/message/conversations',
+        //'/api/message/conversations',
         config
         ).then((response)=>{
             let nrearr=[];
@@ -149,6 +153,7 @@ export default function Messenger() {
         };
         Axios.post( 
         'http://localhost:3500/api/message/messages',
+        //'/api/message/messages',
         bodyParameters,
         config
         ).then((response)=>{
@@ -202,6 +207,7 @@ export default function Messenger() {
     };
     Axios.post( 
     'http://localhost:3500/api/message/deletemessage',
+    //'/api/message/deletemessage',
     bodyParameters,
     config
     ).then((response)=>{
@@ -268,6 +274,7 @@ export default function Messenger() {
       };
       Axios.post( 
       'http://localhost:3500/api/message/messages',
+      //'/api/message/messages',
       bodyParameters,
       config
       ).then((response)=>{

@@ -33,6 +33,7 @@ export default function User() {
 
         Axios.get( 
         `http://localhost:3500/api/user/getuser/${id}`,
+        //`/api/user/getuser/${id}`,
 
         ).then((Response)=>{setuserdata(Response.data)}).catch((e)=>{
             if(e.response.data.msg =="Not Found")
@@ -49,7 +50,9 @@ export default function User() {
         };
         
         Axios.post( 
+        
           'http://localhost:3500/api/user/isfollowed',
+          //'/api/user/isfollowed',
           bodyParameters,
           config
         ).then(response=>{
@@ -83,6 +86,7 @@ export default function User() {
         
         Axios.post( 
           'http://localhost:3500/api/user/follow',
+          //'/api/user/follow',
           bodyParameters,
           config
         ).then(response=>{
@@ -108,6 +112,7 @@ export default function User() {
         
         Axios.post( 
           'http://localhost:3500/api/user/unfollow',
+          //'/api/user/unfollow',
           bodyParameters,
           config
         ).then(response=>{
@@ -151,6 +156,7 @@ export default function User() {
      const asyncfun=async()=>{
        await Axios.get( 
        `http://localhost:3500/api/post/getuserpostes/${id}`,
+       //`/api/post/getuserpostes/${id}`,
        config
        ).then((response)=>{ setTimeout(() => {
          setposts(response.data.posts)

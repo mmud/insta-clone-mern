@@ -41,6 +41,7 @@ export default function Profile() {
 
       Axios.get( 
       `http://localhost:3500/api/auth/getme`,
+      //`/api/auth/getme`,
       config,
       ).then((Response)=>{
         setuserdata(Response.data);
@@ -163,6 +164,7 @@ export default function Profile() {
 
     await Axios.post( 
     'http://localhost:3500/api/user/updateuser',
+    //'/api/user/updateuser',
     bodyParameters,
     config
     ).then(()=>window.location.reload()).catch(e=>{errormsg(e.response.data.msg);console.log(e)});
@@ -179,7 +181,8 @@ export default function Profile() {
      };
      const asyncfun=async()=>{
        await Axios.get( 
-       `http://localhost:3500/api/post/getuserpostes/${parseJwt(localStorage.getItem("token"))?.id}`,
+        `http://localhost:3500/api/post/getuserpostes/${parseJwt(localStorage.getItem("token"))?.id}`,
+        //`/api/post/getuserpostes/${parseJwt(localStorage.getItem("token"))?.id}`,
        config
        ).then((response)=>{ setTimeout(() => {
          setposts(response.data.posts)

@@ -23,7 +23,7 @@ app.post('/',protect,async(req,res)=>{
             Content,images,user:req.user._id
         });
 
-        res.status(200).json({msg:"done"});
+        res.status(200).json({post:post});
     
         } catch (error) {
         console.log(error);
@@ -165,7 +165,7 @@ app.post('/comment',protect,async(req,res)=>{
             $push:{comments:newcomment._id}
         },{new:true})
 
-        res.status(200).json({msg:"done"});
+        res.status(200).json({comment:newcomment});
     
         } catch (error) {
         console.log(error);
