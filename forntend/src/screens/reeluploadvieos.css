@@ -95,6 +95,41 @@
     margin-top: 50px;
 }
 
+.reelupload .video{
+    width: 260px;
+    height: 458px;
+    border-radius: 8px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    -ms-border-radius: 8px;
+    -o-border-radius: 8px;
+    margin-right: 100px;
+}
+
+.myBar {
+    width: 260px;
+    background-color: #DCDCDC;
+    border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    -ms-border-radius: 20px;
+    -o-border-radius: 20px;
+    margin-top: 10px;
+}
+  
+
+  .commonProgressBar {
+    width: 0;
+    height:15px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: row-reverse;
+    background-color: #f48021;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    -ms-border-radius: 20px;
+    -o-border-radius: 20px;
+}
 
 @media (max-width:768px) {
     .reelupload .form{

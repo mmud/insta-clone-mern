@@ -16,6 +16,8 @@ import PostPage from './screens/PostPage';
 import SocketClient from './components/SocketClient';
 import Messenger from './screens/Messenger';
 import Reeluploadvieos from './screens/Reeluploadvieos';
+import ReelPage from './screens/ReelPage';
+import Reels from './screens/Reels';
 
 function App() {
   const [islogedin, setislogedin] = useState(false)
@@ -66,12 +68,14 @@ function App() {
       <Routes>
         <Route path="*" exact element={<Error404/>} />
         <Route path="/" exact element={islogedin?<Home/>:<Landing/>} />
+        <Route path="/reels" exact element={islogedin?<Reels/>:<Navigate to="/login" replace={true}/>} />
         <Route path="/messages" exact element={islogedin?<Messenger/>:<Navigate to="/login" replace={true}/>} />
         <Route path="/messages/:id" exact element={islogedin?<Messenger/>:<Navigate to="/login" replace={true}/>} />
         <Route path="/uploadreel" exact element={islogedin?<Reeluploadvieos/>:<Navigate to="/login" replace={true}/>} />
         <Route path="/Error404" exact element={<Error404/>} />
         <Route path="/user/:id" exact element={<User/>} />
         <Route path="/post/:id" exact element={<PostPage/>} />
+        <Route path="/reel/:id" exact element={<ReelPage/>} />
         <Route path="/profile" exact element={islogedin?<Profile/>:<Navigate to="/login" replace={true}/>}/>
         <Route path="/admin" exact element={islogedin&&parseJwt(localStorage.getItem("token"))?.role==="admin"?<Admin/>:<Error404/>} />
         <Route path="/register" exact element={!islogedin?<Register/>:<Navigate to="/" replace={true}/>} />
