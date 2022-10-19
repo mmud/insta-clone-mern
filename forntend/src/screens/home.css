@@ -10,6 +10,23 @@
     -ms-border-radius: 5px;
     -o-border-radius: 5px;
     display: flex;
+    align-items: center;
+}
+
+.status a{
+    text-align: center;
+    padding: 10px;
+    color: #f48021;
+    margin-left: 10px;
+}
+ .status a:hover{
+    background-color: #f48021;
+    color: white;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
 }
 
 .avatar{

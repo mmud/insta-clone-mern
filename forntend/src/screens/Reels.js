@@ -3,8 +3,11 @@ import React, { useEffect, useRef, useState } from 'react'
 import "./Reels.css"
 import Hammer from 'hammerjs';
 import Reel from '../components/Reel';
+import { useNavigate } from "react-router-dom";
 
 export default function Reels() {
+      const Navigate = useNavigate();
+
         //getreels
         const [posts, setposts] = useState([])
         const [currnet, setcurrnet] = useState(0)
@@ -31,9 +34,9 @@ export default function Reels() {
       const [scrollPosition, setScrollPosition] = useState(0);
       const [maxscrollPosition, setmaxscrollPosition] = useState(0);
       const handleScroll = () => {
-          const position = window.pageYOffset;
+          const position = scrollreelx.current.style.top;
           setScrollPosition(position);
-          const maxposition = -document.documentElement.clientHeight +document.documentElement.offsetHeight;      ;
+          const maxposition = cont.current.scrollHeight;
           setmaxscrollPosition(maxposition);
       };
     
@@ -50,7 +53,7 @@ export default function Reels() {
       const scrollloading = useRef(null)
       const nomoredatatext = useRef(null)
       useEffect(() => {
-        if((scrollPosition/maxscrollPosition)*100>=70 && !anothergetpost &&!nomoredata)
+        if(currnet >= posts.length/2 && !anothergetpost &&!nomoredata)
         {
           setanothergetpost(true);
           scrollloading.current.style.display="block";
@@ -173,6 +176,9 @@ export default function Reels() {
         if(currnet > 0)
         setcurrnet(currnet-1);
      }
+     const add=()=>{
+      Navigate(`/uploadreel`)
+      }
     //   useEffect(() => {
     //     console.log(currnet)
     //     if(up)
@@ -196,7 +202,8 @@ export default function Reels() {
     <div className='container reelcont' ref={cont}>
         <button onClick={up} className="up" style={{"zIndex":"2"}}><i className="fa-solid fa-arrow-down"></i></button>
         <button onClick={down} className="down" style={{"zIndex":"2"}}><i className="fa-solid fa-arrow-up"></i></button>
-        <div className='scrollreel' ref={scrollreelx}>
+        <button onClick={add} className="add" style={{"zIndex":"2"}}><i class="fa-solid fa-plus"></i></button>
+        <div className='scrollreel' ref={scrollreelx}>            
             {posts?.map((reel,i)=><Reel postdata={reel} ref={ addToRefs} />)}
             <div ref={scrollloading} style={{"display":"none","textAlign":"center","fontWeight":"bolder"}}>Loading...</div>
             <div ref={nomoredatatext} style={{"display":"none","textAlign":"center","fontWeight":"bolder"}}>No More Reels</div>

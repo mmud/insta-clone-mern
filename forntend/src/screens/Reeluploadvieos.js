@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import "./reeluploadvieos.css"
 import Swal from 'sweetalert2'
 import  Axios  from 'axios'
+import { useNavigate } from "react-router-dom";
 
 export default function Reeluploadvieos() {
     const [video, setvideo] = useState(null)
@@ -14,12 +15,14 @@ export default function Reeluploadvieos() {
     const uploadarea = useRef(null)
     const progress = useRef(null)
     const showprogress = useRef(null)
+    const Navigate = useNavigate();
+
     const videochange= (e)=>{
         v.current.preload="metadata";
         v.current.onloadedmetadata=()=>{
             window.URL.revokeObjectURL(v.current.src);
             setvideotime(v.current.duration);
-            var aspect = v.current.videoHeight/v.current.videoWidth==16/9||v.current.videoHeight/v.current.videoWidth==18/9||v.current.videoHeight/v.current.videoWidth==19.5/9;
+            var aspect = v.current.videoHeight/v.current.videoWidth==16/9||v.current.videoHeight/v.current.videoWidth==18/9||v.current.videoHeight/v.current.videoWidth==19.5/9||v.current.videoHeight/v.current.videoWidth==218/480;
             console.log(aspect);
             videox.current.src =window.URL.createObjectURL(e.target.files[0]);
             if(e.target.files[0].size <=104857600 ){
@@ -145,7 +148,7 @@ export default function Reeluploadvieos() {
     config
     ).then((response)=>{
       console.log(response);
-      
+      Navigate(`/reel/${response.data.Reel._id}`)
     }).catch(e=>{console.log(e)});
 
       }

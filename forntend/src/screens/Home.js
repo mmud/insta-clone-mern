@@ -1,5 +1,6 @@
 import  Axios  from 'axios';
 import React, { useEffect, useRef, useState } from 'react'
+import { Link, NavLink } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import Post from '../components/Post';
 import "./home.css"
@@ -230,6 +231,7 @@ export default function Home() {
             <button className='statusbtn' onClick={openeditform}>
                 What are you thinking?
             </button>
+            <Link to="/uploadreel"><i className="fa-solid fa-circle-play"></i></Link>
         </div>
         <div className='posts'>
           {

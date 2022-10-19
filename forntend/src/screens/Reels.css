@@ -1,5 +1,5 @@
 .reelcont{
-    height: calc( 100vh - 154px );
+    height: calc( 100vh - 154px + 18px );
     position: relative;
     overflow: hidden;
 }
@@ -13,7 +13,7 @@
     -o-transition: 0.3s;
 }
 
-.reelcont .up , .reelcont .down{
+.reelcont .up , .reelcont .down, .reelcont .add{
     border: none;
     outline: none;
     background-color:#f48021;
@@ -50,6 +50,12 @@
 
 }
 
+.reelcont .add{
+    bottom: 0;
+    left: 0;
+    margin: 30px;
+
+}
 
 @media (max-width:550px) {
     .reelcont .up , .reelcont .down{
